@@ -1,0 +1,30 @@
+# THÔNG TIN DỰ ÁN GREENTECH TOWER (DỮ LIỆU THÔ CHỦ ĐẦU TƯ CUNG CẤP)
+
+- **Tên dự án:** Tòa nhà Văn phòng & Trung tâm Thương mại phức hợp GreenTech Tower.
+- **Địa điểm xây dựng:** Lô đất B2-05, Khu đô thị mới Cầu Giấy, Phường Dịch Vọng Hậu, Quận Cầu Giấy, TP. Hà Nội.
+- **Chủ đầu tư:** Công ty Cổ phần Đầu tư Công nghệ Xanh (GreenTech Invest).
+- **Tư vấn thiết kế kiến trúc & kết cấu:** Liên danh V-Design & Partners.
+- **Tư vấn giám sát:** Công ty CP Giám sát & Quản lý Xây dựng DeltaCon.
+- **Tổng thầu thi công:** Công ty Cổ phần Xây dựng BMTECK SOLUTION.
+- **Quy mô công trình:**
+  - Cấp công trình: Công trình dân dụng cấp I.
+  - Số tầng nổi: 15 tầng (Tầng 1 - 3: Thương mại dịch vụ; Tầng 4 - 15: Văn phòng cho thuê hạng A).
+  - Số tầng hầm: 02 tầng hầm (Hầm 1: Để xe máy và kỹ thuật; Hầm 2: Để xe ô tô và bể nước ngầm).
+  - Chiều cao công trình: 62.5 m (tính từ cao độ vỉa hè đến đỉnh mái kỹ thuật).
+  - Diện tích khu đất: 3.250 m².
+  - Diện tích xây dựng tầng 1: 1.625 m² (Mật độ xây dựng: 50%).
+  - Tổng diện tích sàn xây dựng (GFA): 24.375 m² (chưa bao gồm diện tích 2 tầng hầm).
+  - Diện tích 02 tầng hầm: 6.100 m² (mỗi hầm 3.050 m²).
+- **Giải pháp kết cấu & móng:**
+  - Móng: Móng bè trên nền cọc khoan nhồi D1000 và D1200 (thông số cọc chi tiết chưa phát hành chính thức).
+  - Thân: Khung bê tông cốt thép toàn khối kết hợp lõi cứng thang máy chịu lực gió và động đất cấp 7.
+  - Bê tông cột vách: B35 (M450); Bê tông dầm sàn: B30 (M400); Cốt thép: CB400-V và CB500-V.
+- **Tiến độ mốc (Key Milestones):**
+  - Khởi công ép cừ & đào đất tầng hầm: 15/10/2026.
+  - Hoàn thành phần ngầm (đóng nắp hầm): 15/03/2027.
+  - Cất nóc tầng 15: 15/10/2027.
+  - Bàn giao đưa vào sử dụng (Go-Live): 30/06/2028.
+- **Tiêu chuẩn áp dụng chính:**
+  - QCVN 06:2022/BXD về An toàn cháy cho nhà và công trình.
+  - TCVN 5574:2018 về Kết cấu bê tông và bê tông cốt thép.
+  - TCVN 2737:2023 về Tải trọng và tác động.
