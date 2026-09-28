@@ -1,70 +1,84 @@
 # TÀI LIỆU HƯỚNG DẪN BÀI THỰC HÀNH LAB 02
-## KHAI THÁC HỒ SƠ KỸ THUẬT, LẬP MA TRẬN YÊU CẦU & SOẠN THẢO RFI
-**Thời lượng thực hành:** 55 phút  
-**Sản phẩm nghiệm thu (Deliverable D2):** Ma trận yêu cầu kỹ thuật + Phiếu RFI hoàn chỉnh  
-**Đơn vị đào tạo:** CES Global ([https://aec.cesglobal.com.vn/](https://aec.cesglobal.com.vn/))
+## TỰ TAY ĐÓNG GÓI SKILL RÀ SOÁT HỒ SƠ KỸ THUẬT & CHỐNG BỊA SỐ
+**Thời lượng thực hành:** 35 - 55 phút  
+**Sản phẩm nghiệm thu (Deliverable D2):**
+1. 01 Skill `soat-ho-so-ky-thuat` hoạt động được trong thư mục `.claude/skills/`.
+2. 01 Bảng Ma trận Yêu cầu Kỹ thuật (`Ma_Tran_Yeu_Cau_Ky_Thuat.md`).
+3. 01 Phiếu Yêu cầu Làm rõ Thông tin (`Phieu_RFI_01_Lam_Ro_Thong_Tin.md`).
+**Đơn vị đào tạo:** CES Global AEC ([https://aec.cesglobal.com.vn/](https://aec.cesglobal.com.vn/))
 
 ---
 
-## 1. MỤC TIÊU BÀI LAB 02
-- Cấu hình thành công **Agent 02 - Hồ sơ kỹ thuật (Document & Spec Auditor)** trong AI Workspace của dự án.
-- Sử dụng Agent 02 để đọc và trích xuất dữ liệu từ trích đoạn hồ sơ kỹ thuật mẫu.
-- Tự động lập Bảng Ma trận Yêu cầu Kỹ thuật phục vụ kiểm soát chất lượng vật tư đầu vào.
-- Phát hiện mâu thuẫn kỹ thuật tiềm ẩn trong hồ sơ và tự động sinh Phiếu yêu cầu làm rõ thông tin (RFI) đạt chuẩn hành chính.
+## 1. DỮ LIỆU ĐẦU VÀO CHO BÀI THỰC HÀNH
+
+Học viên sử dụng bộ file PDF mẫu tại thư mục `demo/` của khóa học:
+- **Cặp thực hành 1 (Kiến trúc & PCCC):**
+  - Chỉ dẫn kỹ thuật: `demo/01_Chi_Dan_Ky_Thuat_PCCC_GreenTech_Tower.pdf` (Yêu cầu cửa thoát nạn EI 90)
+  - Thuyết minh bản vẽ: `demo/02_Thuyet_Minh_Ban_Ve_KT102.pdf` (Bảng thống kê ghi cửa D-08 là EI 60)
+- **Cặp thực hành 2 (Kết cấu phần ngầm):**
+  - Chỉ dẫn kỹ thuật: `demo/03_Chi_Dan_Thi_Cong_Be_Tong_Vach_Ham.pdf` (Bê tông B35, chống thấm W10, lớp bảo vệ 40mm)
+  - Thuyết minh bản vẽ: `demo/04_Thuyet_Minh_Ban_Ve_Vach_Ham_KC02.pdf` (Bản vẽ ghi B30, chống thấm W8, lớp bảo vệ 25mm)
+- **Cặp thực hành 3 (Kết cấu thép & Sơn chống cháy - Đề bài nâng cao):**
+  - Chỉ dẫn kỹ thuật: `demo/05_Chi_Dan_Ky_Thuat_Son_Chong_Chay_Ket_Cau_Thep.pdf` (Quy định bắt buộc R120 per QCVN 06:2022)
+  - Thuyết minh bản vẽ: `demo/06_Thuyet_Minh_Ban_Ve_Ket_Cau_Thep_KC105.pdf` (Bản vẽ thép ghi chú R60 màng mỏng 1.2mm)
+
+*(Học viên cũng có thể sử dụng chính tập hồ sơ PDF công việc thực tế của công ty mình).*
 
 ---
 
-## 2. DỮ LIỆU ĐẦU VÀO MẪU (CASE STUDY ASSETS: DỰ ÁN GREENTECH TOWER)
+## 2. CÁC BƯỚC THỰC HIỆN TỪNG BƯỚC (STEP-BY-STEP)
 
-Học viên sử dụng 02 đoạn văn bản trích dẫn kỹ thuật dưới đây làm dữ liệu đầu vào cho bài thực hành:
-
-### Tài liệu A: Trích đoạn Chỉ dẫn Kỹ thuật PCCC & Vật liệu ngăn cháy (Trang 42)
-> *"**Điều 5.3: Yêu cầu đối với hệ thống cửa và vách ngăn buồng thang bộ thoát hiểm**  
-> 1. Căn cứ Quy chuẩn kỹ thuật quốc gia QCVN 06:2022/BXD về An toàn cháy cho nhà và công trình, toàn bộ cửa mở vào buồng thang bộ thoát nạn N1 và N2 (từ tầng hầm đến tầng mái) phải là cửa thép chống cháy có giới hạn chịu lửa tối thiểu **EI 90** (chịu lửa và cách nhiệt trong 90 phút).  
-> 2. Cửa phải được trang bị cơ cấu tự động đóng (tay co thủy lực) và gioăng ngăn khói chuyên dụng đạt chuẩn BS EN 1634-3.  
-> 3. Kính gắn trên cửa chống cháy (nếu có) phải là kính chống cháy đồng bộ đạt giới hạn chịu lửa tối thiểu **EI 90**, chiều dày không nhỏ hơn 25mm.  
-> 4. Nhà thầu trước khi đặt hàng sản xuất đại trà bắt buộc phải trình chứng chỉ thử nghiệm mẫu đốt đạt chuẩn do cơ quan có thẩm quyền của Cục Cảnh sát PCCC & CNCH cấp phép."*
-
-### Tài liệu B: Trích đoạn Thuyết minh & Bảng Thống kê Cửa Bản vẽ Kiến trúc (Trang 15, Bản vẽ KT-102)
-> *"**Bảng thống kê cửa đi tầng 1 đến tầng 5:**  
-> - Ký hiệu cửa: **D-08**  
-> - Vị trí: Cửa buồng thang thoát hiểm trục (2-3, C-D) các tầng 1, 2, 3, 4, 5.  
-> - Kích thước thông thủy: 1200 x 2200 mm (Cửa đi 1 cánh mở một chiều).  
-> - Vật liệu: Thép tấm mạ kẽm dày 1.2mm sơn tĩnh điện hoàn thiện, lõi chèn bông khoáng Rockwool tỷ trọng 100 kg/m³.  
-> - Giới hạn chịu lửa yêu cầu: **EI 60** (chống cháy 60 phút).  
-> - Phụ kiện đi kèm: Bản lề inox 304 chịu lực, khóa tay gạt inox, thanh thoát hiểm panic bar, tay co thủy lực Hafele hoặc tương đương."*
+### BƯỚC 1: Khởi tạo Cấu trúc Thư mục Skill (5 phút)
+Mở Claude Code tại thư mục dự án đã tạo từ Buổi 01, thực hiện lệnh tạo thư mục:
+```bash
+mkdir -p .claude/skills/soat-ho-so-ky-thuat
+```
 
 ---
 
-## 3. CÁC BƯỚC THỰC HÀNH TỪNG BƯỚC (STEP-BY-STEP)
+### BƯỚC 2: Tạo File Cấu hình `SKILL.md` (10 phút)
+Yêu cầu Claude Code tạo file `.claude/skills/soat-ho-so-ky-thuat/SKILL.md` hoặc sao chép nội dung từ file mẫu tại `demo/skill-mau/SKILL.md`.
 
-### Bước 1: Nạp Dữ Liệu & Cấu Hình Agent 02 (Thời gian: 10 phút)
-1. Mở AI Workspace `[CES] - GREENTECH TOWER AI WORKSPACE` đã tạo từ Buổi 01.
-2. Thêm file mới hoặc nạp nội dung của **Tài liệu A** và **Tài liệu B** vào phần dữ liệu của Workspace.
-3. Kích hoạt **Agent 02** bằng System Prompt từ file [02_Thu_Vien_Prompt_Thuc_Chien_Buoi_02.md](file:///f:/GitHub/Tai-lieu-khoa-hoc-ai-xay-dung/02_Buoi_02_Khai_Thac_Ho_So_Ky_Thuat/02_Thu_Vien_Prompt_Thuc_Chien_Buoi_02.md).
-
-### Bước 2: Lập Ma Trận Yêu Cầu Kỹ Thuật (Thời gian: 15 phút)
-1. Sử dụng **Prompt 2.2** trong Thư viện Prompt Buổi 02.
-2. Yêu cầu Agent 02 bóc tách toàn bộ các thông số kỹ thuật, quy cách vật liệu và tiêu chuẩn thí nghiệm kiểm định của hệ thống cửa D-08.
-3. Kiểm tra kết quả: Đảm bảo bảng có đầy đủ các chỉ số: chiều dày thép, tỷ trọng bông khoáng, phụ kiện, chứng chỉ PCCC.
-
-### Bước 3: Rà Soát & Đối Chiếu Xung Đột (Thời gian: 15 phút)
-1. Sử dụng **Prompt 2.3** (Rà soát mâu thuẫn đa tài liệu).
-2. Yêu cầu Agent 02 đối chiếu thông số giới hạn chịu lửa giữa Tài liệu A (Chỉ dẫn kỹ thuật) và Tài liệu B (Bản vẽ kiến trúc).
-3. Đánh giá phát hiện:
-   - Chỉ dẫn kỹ thuật yêu cầu **EI 90**.
-   - Bản vẽ kiến trúc yêu cầu **EI 60**.
-   - Phân tích rủi ro: Nếu sản xuất theo EI 60 sẽ giảm chi phí ban đầu nhưng công trình chắc chắn sẽ bị đình chỉ nghiệm thu PCCC khi nghiệm thu bàn giao đưa vào sử dụng!
-
-### Bước 4: Soạn Thảo Phiếu RFI Chuẩn Mực (Thời gian: 15 phút)
-1. Sử dụng **Prompt 2.4** để sinh Phiếu RFI số `RFI-ARC-001`.
-2. Kiểm tra lại văn phong: Đảm bảo ngôn từ lịch thiệp, chặt chẽ, khách quan và thể hiện rõ vị thế của Kỹ sư chuyên nghiệp.
-3. Xuất kết quả ra file tài liệu `RFI_01_Lam_Ro_Cua_Chong_Chay.md`.
+**Điểm kiểm tra bắt buộc trong file SKILL.md:**
+- Có đủ 2 trường YAML: `name: soat-ho-so-ky-thuat` và `description` rõ ràng mô tả *"Dùng khi rà soát chỉ dẫn kỹ thuật, đối chiếu mâu thuẫn bản vẽ và lập phiếu RFI"*.
+- Có quy tắc chống bịa: Chỗ nào tài liệu không có ghi *"Tài liệu không đề cập"*, trích dẫn số trang đầy đủ.
 
 ---
 
-## 4. TỔNG KẾT SẢN PHẨM NỘP BÀI LAB 02
-Học viên xuất 02 sản phẩm:
-1. File `Ma_Tran_Yeu_Cau_Ky_Thuat_Cua_D08.md`
-2. File `Phiếu_RFI_01_Lam_Ro_Cua_Chong_Chay.md`
-Hai tài liệu này sẽ được dùng làm căn cứ để tính toán chi phí và BOQ trong Buổi 04.
+### BƯỚC 3: Chạy Skill Trên Hồ Sơ Thực Tế (15 phút)
+Thử kích hoạt Skill bằng câu lệnh tự nhiên (không cần gõ tên skill):
+
+```markdown
+Rà soát và đối chiếu mâu thuẫn kỹ thuật giữa hai tài liệu:
+1. demo/01_Chi_Dan_Ky_Thuat_PCCC_GreenTech_Tower.pdf
+2. demo/02_Thuyet_Minh_Ban_Ve_KT102.pdf
+Xuất kết quả ra file Ma_Tran_Yeu_Cau_Ky_Thuat.md và Phieu_RFI_01_Lam_Ro_Thong_Tin.md
+```
+
+**Quan sát trên màn hình:**
+- Claude Code sẽ hiển thị thông báo đang kích hoạt skill: `Using skill: soat-ho-so-ky-thuat`.
+- AI tự động trích xuất bảng ma trận 6 cột, chỉ ra điểm mâu thuẫn **EI 90 (Trang 42)** vs **EI 60 (Trang 15)**, và lập 01 Phiếu RFI số `RFI-ARC-001` chuẩn thể thức.
+
+---
+
+### BƯỚC 4: Kiểm Chứng Tính Tái Sử Dụng Thần Tốc (5 - 10 phút)
+Đưa vào các cặp tài liệu tiếp theo để kiểm tra năng lực tự động hóa:
+- **Test Case A (Kết cấu vách hầm):**
+  ```markdown
+  Rà soát và đối chiếu mâu thuẫn giữa:
+  1. demo/03_Chi_Dan_Thi_Cong_Be_Tong_Vach_Ham.pdf
+  2. demo/04_Thuyet_Minh_Ban_Ve_Vach_Ham_KC02.pdf
+  Lập bảng so sánh B35-W10 vs B30-W8 và đề xuất phương án xử lý rủi ro thấm ngầm.
+  ```
+- **Test Case B (Thử thách nâng cao - Sơn chống cháy thép):**
+  ```markdown
+  Rà soát và đối chiếu mâu thuẫn giữa:
+  1. demo/05_Chi_Dan_Ky_Thuat_Son_Chong_Chay_Ket_Cau_Thep.pdf
+  2. demo/06_Thuyet_Minh_Ban_Ve_Ket_Cau_Thep_KC105.pdf
+  Xuất phiếu RFI và tính toán chênh lệch ngân sách giữa định mức R120 và R60.
+  ```
+
+---
+
+## 3. TỔNG KẾT & NỘP BÀI DELIVERABLE D2
+Chụp ảnh màn hình terminal Claude Code hiển thị dòng `Using skill: soat-ho-so-ky-thuat` và nộp 02 file kết quả (`Ma_Tran_Yeu_Cau_Ky_Thuat.md` và `Phieu_RFI_01_Lam_Ro_Thong_Tin.md`) vào nhóm Zalo lớp để Giảng viên và Trợ giảng chấm điểm nghiệm thu.

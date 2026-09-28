@@ -1,0 +1,2026 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buổi 02: Từ Rà Soát Hồ Sơ Kỹ Thuật Đến Đóng Gói Skill Tự Động Hóa Chuẩn TCVN | Swiss Editorial AEC</title>
+
+    <!-- Google Fonts: Space Grotesk (Architectural Display), Plus Jakarta Sans (Editorial Body), JetBrains Mono (Technical) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           1. CSS CUSTOM PROPERTIES (THEME: LIGHT SWISS ARCHITECTURAL / EDITORIAL)
+           ========================================================================== */
+        :root {
+            /* Backgrounds */
+            --stage-bg: #eceae5;
+            --slide-bg: #f9f8f6;
+            --card-bg: #ffffff;
+            --card-border: #e2dfd7;
+            --card-border-hover: #0f172a;
+
+            /* Swiss Editorial Accents */
+            --swiss-black: #0f172a;
+            --swiss-red: #e11d48;
+            --swiss-orange: #ea580c;
+            --swiss-blue: #0284c7;
+            --swiss-navy: #1e3a8a;
+            --swiss-emerald: #059669;
+            --swiss-amber: #d97706;
+            --swiss-purple: #7c3aed;
+
+            /* Text Colors */
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --text-inverted: #ffffff;
+
+            /* Typography */
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+
+            /* Spacing (1920x1080 stage canvas) */
+            --slide-padding: 56px 80px 48px;
+            --radius-lg: 16px;
+            --radius-md: 10px;
+            --radius-sm: 6px;
+
+            /* Dynamic Font Scale Multiplier */
+            --font-scale: 1;
+
+            /* Animation */
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-smooth: 0.35s var(--ease-out-expo);
+        }
+
+        /* ==========================================================================
+           2. FIXED 16:9 STAGE BASE
+           ========================================================================== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background: var(--stage-bg);
+            font-family: var(--font-body);
+            font-size: calc(18px * var(--font-scale));
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .deck-viewport {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            background: var(--stage-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .deck-stage {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 1920px;
+            height: 1080px;
+            overflow: hidden;
+            transform-origin: 0 0;
+            background: var(--slide-bg);
+            box-shadow: 0 25px 70px rgba(15, 23, 42, 0.12);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        /* Subtle Architectural Editorial Grid */
+        .stage-grid {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(15, 23, 42, 0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(15, 23, 42, 0.035) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Top Red Accent Line (Swiss Signature) */
+        .stage-swiss-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: var(--swiss-red);
+            z-index: 100;
+        }
+
+        /* Slides Stacking */
+        .slide {
+            position: absolute;
+            inset: 0;
+            width: 1920px;
+            height: 1080px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: var(--slide-padding);
+            visibility: hidden;
+            opacity: 0;
+            pointer-events: none;
+            background: transparent;
+            z-index: 1;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .slide.active {
+            visibility: visible;
+            opacity: 1;
+            pointer-events: auto;
+            z-index: 2;
+        }
+
+        /* Slide animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity var(--transition-smooth), transform var(--transition-smooth);
+        }
+
+        .slide.active .reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide.active .reveal:nth-child(1) { transition-delay: 0.05s; }
+        .slide.active .reveal:nth-child(2) { transition-delay: 0.10s; }
+        .slide.active .reveal:nth-child(3) { transition-delay: 0.15s; }
+        .slide.active .reveal:nth-child(4) { transition-delay: 0.20s; }
+
+        /* ==========================================================================
+           3. GLOBAL SLIDE CHROME (HEADER & TITLE)
+           ========================================================================== */
+        .slide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+            position: relative;
+            z-index: 10;
+            border-bottom: 1.5px solid var(--card-border);
+            padding-bottom: 14px;
+        }
+
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-family: var(--font-mono);
+            font-size: calc(16px * var(--font-scale));
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: var(--swiss-black);
+            text-transform: uppercase;
+        }
+
+        .brand-badge .box-icon {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            background: var(--swiss-red);
+        }
+
+        .session-tag {
+            font-family: var(--font-mono);
+            font-size: calc(16px * var(--font-scale));
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+
+        .session-tag span {
+            color: var(--swiss-navy);
+            font-weight: 700;
+        }
+
+        .slide-title-wrap {
+            margin-bottom: 24px;
+        }
+
+        .slide-category {
+            font-family: var(--font-mono);
+            font-size: calc(16px * var(--font-scale));
+            font-weight: 700;
+            color: var(--swiss-red);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .slide-title {
+            font-family: var(--font-display);
+            font-size: calc(48px * var(--font-scale));
+            font-weight: 800;
+            line-height: 1.18;
+            letter-spacing: -0.03em;
+            color: var(--swiss-black);
+        }
+
+        .slide-title span {
+            color: var(--swiss-red);
+        }
+
+        .slide-subtitle {
+            font-size: calc(20px * var(--font-scale));
+            color: var(--text-secondary);
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        /* Slide Content Stage Flex Layout */
+        .slide-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* ==========================================================================
+           4. SWISS CARD & BENTO GRID SYSTEM
+           ========================================================================== */
+        .swiss-card {
+            background: var(--card-bg);
+            border: 1.5px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 26px 30px;
+            position: relative;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .swiss-card.highlight {
+            border-color: var(--swiss-red);
+            background: #ffffff;
+            box-shadow: 0 8px 24px rgba(225, 29, 72, 0.08);
+        }
+
+        .swiss-card.navy-highlight {
+            border-color: var(--swiss-navy);
+            background: #ffffff;
+            box-shadow: 0 8px 24px rgba(30, 58, 138, 0.08);
+        }
+
+        .card-num {
+            font-family: var(--font-mono);
+            font-size: calc(16px * var(--font-scale));
+            font-weight: 700;
+            color: var(--swiss-red);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-title {
+            font-family: var(--font-display);
+            font-size: calc(28px * var(--font-scale));
+            font-weight: 700;
+            color: var(--swiss-black);
+            line-height: 1.25;
+            margin-bottom: 12px;
+        }
+
+        .card-text {
+            font-size: calc(20px * var(--font-scale));
+            color: var(--text-secondary);
+            line-height: 1.55;
+        }
+
+        .card-list {
+            list-style: none;
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .card-list li {
+            font-size: calc(18px * var(--font-scale));
+            color: var(--text-secondary);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            line-height: 1.45;
+        }
+
+        .card-list li strong {
+            color: var(--swiss-black);
+        }
+
+        .badge-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-family: var(--font-mono);
+            font-size: calc(15px * var(--font-scale));
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-red { background: #ffe4e6; color: var(--swiss-red); border: 1px solid #fecdd3; }
+        .badge-blue { background: #e0f2fe; color: var(--swiss-blue); border: 1px solid #bae6fd; }
+        .badge-green { background: #dcfce7; color: var(--swiss-emerald); border: 1px solid #bbf7d0; }
+        .badge-amber { background: #fef3c7; color: var(--swiss-amber); border: 1px solid #fde68a; }
+        .badge-navy { background: #dbeafe; color: var(--swiss-navy); border: 1px solid #bfdbfe; }
+
+        /* Grids */
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            align-items: stretch;
+        }
+
+        .grid-3col {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+            align-items: stretch;
+        }
+
+        .grid-4col {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 22px;
+            align-items: stretch;
+        }
+
+        .grid-split-73 {
+            display: grid;
+            grid-template-columns: 1.3fr 0.9fr;
+            gap: 32px;
+            align-items: stretch;
+        }
+
+        .grid-split-64 {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 32px;
+            align-items: stretch;
+        }
+
+        /* ==========================================================================
+           5. TECHNICAL CODE / CONSOLE BOX
+           ========================================================================== */
+        .terminal-box {
+            background: #090d16;
+            border: 1px solid #1e293b;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 16px 36px rgba(15, 23, 42, 0.15);
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .terminal-header {
+            background: #111827;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #1f2937;
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 7px;
+        }
+
+        .terminal-dots span {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+        }
+        .dot-red { background: #ef4444; }
+        .dot-yellow { background: #f59e0b; }
+        .dot-green { background: #10b981; }
+
+        .terminal-title {
+            font-family: var(--font-mono);
+            font-size: calc(15px * var(--font-scale));
+            color: #94a3b8;
+            font-weight: 600;
+        }
+
+        .terminal-body {
+            padding: 20px 24px;
+            font-family: var(--font-mono);
+            font-size: calc(17px * var(--font-scale));
+            line-height: 1.65;
+            color: #cbd5e1;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+
+        .terminal-body .cmd { color: #38bdf8; font-weight: 700; }
+        .terminal-body .comment { color: #64748b; font-style: italic; }
+        .terminal-body .err { color: #f43f5e; font-weight: 700; }
+        .terminal-body .ok { color: #10b981; font-weight: 700; }
+        .terminal-body .key { color: #fbbf24; font-weight: 600; }
+
+        /* Modern Data Table */
+        .swiss-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: calc(18px * var(--font-scale));
+            text-align: left;
+        }
+
+        .swiss-table th {
+            background: #f1f5f9;
+            color: var(--swiss-black);
+            font-family: var(--font-display);
+            font-weight: 700;
+            padding: 12px 18px;
+            border-bottom: 2px solid var(--card-border);
+            font-size: calc(17px * var(--font-scale));
+        }
+
+        .swiss-table td {
+            padding: 12px 18px;
+            border-bottom: 1px solid var(--card-border);
+            color: var(--text-secondary);
+            line-height: 1.45;
+        }
+
+        .swiss-table tr:hover td {
+            background: #ffffff;
+        }
+
+        /* Practice Timer */
+        .timer-card {
+            background: #ffffff;
+            border: 2px solid var(--swiss-navy);
+            border-radius: var(--radius-lg);
+            padding: 18px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .timer-clock {
+            font-family: var(--font-mono);
+            font-size: calc(44px * var(--font-scale));
+            font-weight: 800;
+            color: var(--swiss-navy);
+            letter-spacing: 0.04em;
+        }
+
+        /* ==========================================================================
+           6. DECK HUD CONTROLS (NAVBAR, PROGRESS, FONT SCALER, FULLSCREEN)
+           ========================================================================== */
+        .deck-hud {
+            position: absolute;
+            bottom: 20px;
+            left: 80px;
+            right: 80px;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(12px);
+            padding: 10px 22px;
+            border-radius: 999px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+        }
+
+        .hud-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .hud-counter {
+            font-family: var(--font-mono);
+            font-size: calc(16px * var(--font-scale));
+            font-weight: 700;
+            color: var(--swiss-black);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .hud-progress-track {
+            width: 240px;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .hud-progress-bar {
+            height: 100%;
+            background: var(--swiss-red);
+            width: 4.54%;
+            transition: width 0.25s ease;
+        }
+
+        .hud-buttons {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hud-btn {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: calc(15px * var(--font-scale));
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 999px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .hud-btn:hover {
+            background: #f1f5f9;
+            border-color: var(--swiss-black);
+            transform: translateY(-1px);
+        }
+
+        .hud-btn-primary {
+            background: var(--swiss-red);
+            color: #ffffff;
+            border-color: var(--swiss-red);
+        }
+
+        .hud-btn-primary:hover {
+            background: #be123c;
+            border-color: #be123c;
+            color: #ffffff;
+        }
+
+        /* Font Scaler Toolset */
+        .font-scaler-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: #f1f5f9;
+            padding: 3px 6px;
+            border-radius: 999px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .scaler-btn {
+            background: transparent;
+            border: none;
+            font-family: var(--font-mono);
+            font-size: calc(14px * var(--font-scale));
+            font-weight: 700;
+            color: var(--text-secondary);
+            padding: 3px 8px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .scaler-btn:hover {
+            background: #ffffff;
+            color: var(--swiss-red);
+        }
+
+        /* ==========================================================================
+           7. SPEAKER NOTES & OVERVIEW MODALS
+           ========================================================================== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.72);
+            backdrop-filter: blur(10px);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal-card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 1100px;
+            max-height: 85vh;
+            border-radius: var(--radius-lg);
+            padding: 32px 40px;
+            overflow-y: auto;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .overview-item {
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: var(--radius-md);
+            padding: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .overview-item:hover, .overview-item.active {
+            border-color: var(--swiss-red);
+            background: #ffffff;
+            box-shadow: 0 4px 12px rgba(225, 29, 72, 0.12);
+        }
+
+        .overview-item .num {
+            font-family: var(--font-mono);
+            font-size: calc(14px * var(--font-scale));
+            font-weight: 700;
+            color: var(--swiss-red);
+        }
+
+        .overview-item .title {
+            font-family: var(--font-display);
+            font-size: calc(16px * var(--font-scale));
+            font-weight: 700;
+            color: var(--swiss-black);
+            margin-top: 4px;
+        }
+
+        /* Speaker Drawer */
+        .speaker-drawer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(16px);
+            border-top: 3px solid var(--swiss-red);
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
+            padding: 18px 80px;
+            z-index: 150;
+            transform: translateY(100%);
+            transition: transform 0.25s var(--ease-out-expo);
+            max-height: 240px;
+            overflow-y: auto;
+        }
+
+        .speaker-drawer.active { transform: translateY(0); }
+    </style>
+</head>
+<body>
+
+    <div class="deck-viewport">
+        <div class="deck-stage" id="deckStage">
+            <div class="stage-grid"></div>
+            <div class="stage-swiss-line"></div>
+
+            <!-- ====================================================================
+                 SLIDE 01: HERO COVER
+                 ==================================================================== -->
+            <section class="slide active" data-slide="1" data-title="Slide Tiêu Đề">
+                <div class="slide-header">
+                    <div class="brand-badge"><span class="box-icon"></span> CES GLOBAL AEC — AI IN CONSTRUCTION</div>
+                    <div class="session-tag">KHÓA HỌC: <span>AI AGENT XÂY DỰNG</span></div>
+                </div>
+
+                <div class="slide-body">
+                    <div class="grid-split-73">
+                        <div class="reveal">
+                            <div class="slide-category">BUỔI 02 / 06 CHUYÊN ĐỀ</div>
+                            <h1 class="slide-title" style="font-size: 52px; line-height: 1.15; margin-bottom: 16px;">
+                                TỪ RÀ SOÁT HỒ SƠ KỸ THUẬT<br>
+                                ĐẾN <span>ĐÓNG GÓI SKILL TỰ ĐỘNG HÓA</span><br>
+                                CHUẨN TCVN
+                            </h1>
+                            <p class="slide-subtitle" style="font-size: 22px; max-width: 900px; margin-bottom: 28px;">
+                                Khai thác hồ sơ mời thầu, bóc tách chỉ dẫn PCCC, đối chiếu mâu thuẫn bản vẽ, chống bịa số liệu và làm chủ Hệ sinh thái <strong>vn-autocad-skill</strong>.
+                            </p>
+
+                            <div style="display: flex; gap: 16px; align-items: center;">
+                                <div class="badge-tag badge-red" style="font-size: 16px; padding: 6px 16px;">⚡ TÁC NHÂN: AGENT 02 — SPEC AUDITOR</div>
+                                <div class="badge-tag badge-navy" style="font-size: 16px; padding: 6px 16px;">🏢 DỰ ÁN MẪU: GREENTECH TOWER</div>
+                                <div class="badge-tag badge-green" style="font-size: 16px; padding: 6px 16px;">📐 NORTH STAR: VN-AUTOCAD-SKILL</div>
+                            </div>
+                        </div>
+
+                        <div class="reveal">
+                            <div class="terminal-box">
+                                <div class="terminal-header">
+                                    <div class="terminal-dots">
+                                        <span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span>
+                                    </div>
+                                    <div class="terminal-title">claude-code — aec-session-02</div>
+                                </div>
+                                <div class="terminal-body">
+<span class="comment"># Kích hoạt Agent 02 & Nạp hồ sơ kỹ thuật PDF</span>
+<span class="cmd">&gt; claude</span> --project greentech-tower
+<span class="ok">✓</span> Workspace: Greentech Tower AI Ready
+<span class="ok">✓</span> Loaded: 01_Chi_Dan_Ky_Thuat_PCCC.pdf (42 trang)
+<span class="ok">✓</span> Loaded: 02_Thuyet_Minh_Ban_Ve_KT102.pdf (15 trang)
+
+<span class="cmd">&gt; rà soát mâu thuẫn cửa chống cháy buồng thang</span>
+<span class="key">⚡ Auto-activating skill: soat-ho-so-ky-thuat</span>
+<span class="err">⚠ PHÁT HIỆN XUNG ĐỘT PHÁP LÝ NGHIÊM TRỌNG:</span>
+- Spec PCCC (Trang 42): Yêu cầu <span class="err">EI 90</span>
+- Bản vẽ KT-102 (Trang 15): Ghi chú <span class="err">EI 60</span>
+<span class="ok">✓ Tự động dự thảo Phiếu RFI-ARC-001 gửi TVTK</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================================
+                 SLIDE 02: NỖI ĐAU THỰC TẾ
+                 ==================================================================== -->
+            <section class="slide" data-slide="2" data-title="Nỗi Đau Rà Soát Hồ Sơ">
+                <div class="slide-header">
+                    <div class="brand-badge"><span class="box-icon"></span> CES GLOBAL AEC</div>
+                    <div class="session-tag">PHẦN 1: <span>BỐI CẢNH & THÁCH THỨC</span></div>
+                </div>
+                <div class="slide-title-wrap">
+                    <div class="slide-category">VẤN ĐỀ CỦA KỸ SƯ</div>
+                    <h2 class="slide-title">Hàng Trăm Trang Hồ Sơ Kỹ Thuật: <span>Đọc Bằng Mắt Là Rủi Ro</span></h2>
+                    <p class="slide-subtitle">Vì sao phương pháp rà soát thủ công luôn bỏ lọt các sai lệch gây đình chỉ nghiệm thu công trình?</p>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-3col">
+                        <div class="swiss-card highlight reveal">
+                            <div>
+                                <div class="card-num">01 / DUNG LƯỢNG KHỔNG LỒ</div>
+                                <div class="card-title">Phân Mảnh & Hỗn Hợp</div>
+                                <div class="card-text">Một dự án có hàng chục tập hồ sơ: Thuyết minh chung, Chỉ dẫn cọc, Bê tông cốt thép, Hoàn thiện, MEP, PCCC vừa dạng scan, vừa Word và CAD.</div>
+                            </div>
+                            <div class="badge-tag badge-red" style="margin-top: 14px;">MẤT 3-5 NGÀY ĐỌC THỦ CÔNG</div>
+                        </div>
+                        <div class="swiss-card highlight reveal">
+                            <div>
+                                <div class="card-num">02 / LẠC TRÔI THÔNG TIN</div>
+                                <div class="card-title">Lost in the Middle</div>
+                                <div class="card-text">Các điều khoản quan trọng về dung sai nghiệm thu, tỷ trọng vật liệu, chứng chỉ đốt mẫu PCCC thường bị chôn sâu ở các phụ lục giữa tài liệu mà mắt người dễ lướt qua.</div>
+                            </div>
+                            <div class="badge-tag badge-amber" style="margin-top: 14px;">DỄ BỎ SÓT ĐIỀU KHOẢN PHẠT</div>
+                        </div>
+                        <div class="swiss-card highlight reveal">
+                            <div>
+                                <div class="card-num">03 / XUNG ĐỘT ĐA HỒ SƠ</div>
+                                <div class="card-title">Vênh Giữa Vẽ & Thuyết Minh</div>
+                                <div class="card-text">Bản vẽ kiến trúc ghi một đằng (EI 60), thuyết minh PCCC ghi một nẻo (EI 90). Nếu không phát hiện sớm, sản xuất hàng loạt sẽ không được thẩm duyệt nghiệm thu.</div>
+                            </div>
+                            <div class="badge-tag badge-red" style="margin-top: 14px;">THIỆT HẠI HÀNG TỶ ĐỒNG</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================================
+                 SLIDE 03: GIẢI PHÁP: SKILL LÀ GÌ?
+                 ==================================================================== -->
+            <section class="slide" data-slide="3" data-title="Skill Là Gì?">
+                <div class="slide-header">
+                    <div class="brand-badge"><span class="box-icon"></span> CES GLOBAL AEC</div>
+                    <div class="session-tag">PHẦN 2: <span>TƯ DUY ĐÓNG GÓI SKILL</span></div>
+                </div>
+                <div class="slide-title-wrap">
+                    <div class="slide-category">ĐỊNH NGHĨA CỐT LÕI</div>
+                    <h2 class="slide-title">Skill Là Gì? <span>Tờ Quy Trình SOP Dạng Số Cho AI</span></h2>
+                    <p class="slide-subtitle">Chuyển đổi từ việc chat ngẫu hứng sang quy trình tự động hóa tái sử dụng vĩnh viễn.</p>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-2col">
+                        <div class="swiss-card reveal">
+                            <div class="card-num">CÁCH LÀM CŨ: CHAT NGẪU HỨNG</div>
+                            <div class="card-title" style="color: var(--swiss-red);">Gõ Lại Từ Đầu Mỗi Lần</div>
+                            <ul class="card-list">
+                                <li>❌ Mỗi dự án mới lại phải nghĩ cách đặt câu hỏi dài dòng.</li>
+                                <li>❌ 5 kỹ sư trong cùng một phòng ban hỏi 5 kiểu, kết quả vênh nhau.</li>
+                                <li>❌ AI trả lời văn phong chung chung, thiếu bảng ma trận, thiếu số trang.</li>
+                                <li>❌ Không kiểm soát được tình trạng AI "bịa số liệu" khi tài liệu thiếu.</li>
+                            </ul>
+                        </div>
+                        <div class="swiss-card navy-highlight reveal">
+                            <div class="card-num">CÁCH LÀM MỚI: ĐÓNG GÓI SKILL</div>
+                            <div class="card-title" style="color: var(--swiss-navy);">Đóng Gói 1 Lần — Dùng Mãi Mãi</div>
+                            <ul class="card-list">
+                                <li>✔ Đúc kết quy trình chuẩn thành 01 file duy nhất: <code>SKILL.md</code>.</li>
+                                <li>✔ AI **tự động nạp Skill** khi gặp yêu cầu liên quan, không cần gọi tên.</li>
+                                <li>✔ Luôn xuất đúng 5 mục: Tóm tắt ➔ Ma trận ➔ Soát mâu thuẫn ➔ RFI ➔ Chống bịa.</li>
+                                <li>✔ Bắt buộc trích dẫn số trang chính xác cho từng chỉ tiêu kỹ thuật.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================================
+                 SLIDE 04: CẤU TRÚC SKILL.MD
+                 ==================================================================== -->
+            <section class="slide" data-slide="4" data-title="Giải Phẫu SKILL.md">
+                <div class="slide-header">
+                    <div class="brand-badge"><span class="box-icon"></span> CES GLOBAL AEC</div>
+                    <div class="session-tag">PHẦN 2: <span>TƯ DUY ĐÓNG GÓI SKILL</span></div>
+                </div>
+                <div class="slide-title-wrap">
+                    <div class="slide-category">CẤU TRÚC KỸ THUẬT</div>
+                    <h2 class="slide-title">Giải Phẫu Một File <code>SKILL.md</code> <span>Chuẩn Mực</span></h2>
+                    <p class="slide-subtitle">Nằm tại <code>.claude/skills/&lt;tên-skill&gt;/SKILL.md</code> trong thư mục dự án.</p>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-split-64">
+                        <div class="terminal-box reveal">
+                            <div class="terminal-header">
+                                <div class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                                <div class="terminal-title">.claude/skills/soat-ho-so-ky-thuat/SKILL.md</div>
+                            </div>
+                            <div class="terminal-body" style="font-size: 16px;">
+<span class="err">---</span>
+<span class="key">name:</span> soat-ho-so-ky-thuat
+<span class="key">description:</span> Dùng khi cần rà soát chỉ dẫn kỹ thuật, đối chiếu mâu thuẫn
+  giữa bản vẽ và thuyết minh, lập ma trận nghiệm thu vật tư và sinh phiếu RFI.
+<span class="err">---</span>
+
+# Quy trình rà soát hồ sơ kỹ thuật & đối soát mâu thuẫn
+Khi người dùng đưa vào file hồ sơ PDF/CAD, làm đúng các bước:
+1. Đọc toàn bộ tài liệu và bóc tách quy cách kỹ thuật cốt lõi.
+2. Xuất bảng MA TRẬN YÊU CẦU NGHIỆM THU gồm 6 cột chuẩn.
+3. RÀ SOÁT MÂU THUẪN ĐA HỒ SƠ: Chỉ rõ số trang vênh nhau.
+4. TỰ ĐỘNG DỰ THẢO PHIẾU RFI gửi TVTK và Chủ đầu tư.
+5. QUY TẮC CHỐNG BỊA: Chỗ nào không có ghi 'Tài liệu không đề cập'.
+                            </div>
+                        </div>
+                        <div class="swiss-card reveal">
+                            <div class="card-num">02 THÀNH PHẦN BẮT BUỘC</div>
+                            <div class="card-title">Nguyên Lý Vận Hành</div>
+                            <div class="card-list" style="gap: 16px;">
+                                <li>
+                                    <strong>1. YAML Frontmatter (Đầu file):</strong> Chứa <code>name</code> và <code>description</code>. Dòng mô tả này là "công tắc cảm biến" giúp AI tự nhận diện công việc.
+                                </li>
+                                <li>
+                                    <strong>2. Thân chỉ dẫn (Body):</strong> Quy định rõ ràng các bước thực hiện, cấu trúc cột của bảng ma trận, và các tiêu chí bắt buộc trích dẫn số trang.
+                                </li>
+                                <li>
+                                    <strong>3. Không cần cài đặt phức tạp:</strong> Chỉ là một file Markdown thuần túy lưu đúng vị trí trong thư mục dự án!
+                                </li>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================================
+                 SLIDE 05: CƠ CHẾ AUTO-LOAD
+                 ==================================================================== -->
+            <section class="slide" data-slide="5" data-title="Cơ Chế Tự Nạp Skill">
+                <div class="slide-header">
+                    <div class="brand-badge"><span class="box-icon"></span> CES GLOBAL AEC</div>
+                    <div class="session-tag">PHẦN 2: <span>TƯ DUY ĐÓNG GÓI SKILL</span></div>
+                </div>
+                <div class="slide-title-wrap">
+                    <div class="slide-category">ĐIỂM MẤU CHỐT SƯ PHẠM</div>
+                    <h2 class="slide-title">Cơ Chế Auto-Load: <span>Dòng Description Quyết Định Tất Cả</span></h2>
+                    <p class="slide-subtitle">Làm sao Claude Code biết lúc nào cần tự nạp Skill mà bạn không cần gọi tên?</p>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-2col">
+                        <div class="swiss-card reveal">
+                            <div class="card-num">NGUYÊN LÝ KHỚP NGỮ NGHĨA (SEMANTIC MATCHING)</div>
+                            <div class="card-title">Mô Tả Càng Rõ — Tự Nạp Càng Chuẩn</div>
+                            <div class="card-text">
+                                Khi bạn nhập bất kỳ câu hỏi nào, Claude sẽ so sánh ý định của câu hỏi với dòng <code>description</code> của toàn bộ các Skill có trong thư mục. Nếu độ trùng khớp cao, Claude sẽ **tự động chèn toàn bộ chỉ dẫn của Skill vào ngữ cảnh làm việc**!
+                            </div>
+                            <div class="badge-tag badge-green" style="margin-top: 14px; font-size: 16px;">AUTO-ACTIVATION: TỰ ĐỘNG 100%</div>
+                        </div>
+                        <div class="swiss-card highlight reveal">
+                            <div class="card-num">SO SÁNH 2 CÁCH VIẾT DESCRIPTION</div>
+                            <div class="card-title">Cạm Bẫy Cần Tránh</div>
+                            <div class="card-list">
+                                <li style="color: var(--swiss-red);">
+                                    ❌ <strong>Viết mơ hồ:</strong> <code>description: Skill đọc tài liệu</code> ➔ Claude không biết dùng khi nào, sẽ bỏ qua hoặc chỉ trả lời chung chung.
+                                </li>
+                                <li style="color: var(--swiss-emerald);">
+                                    ✔ <strong>Viết chuẩn kỹ thuật:</strong> <code>description: Dùng khi cần rà soát chỉ dẫn kỹ thuật, đối chiếu mâu thuẫn giữa bản vẽ và thuyết minh, lập ma trận nghiệm thu vật tư và sinh phiếu RFI.</code> ➔ Bách phát bách trúng!
+                                </li>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================================
+                 SLIDE 06: QUY TẮC CHỐNG BỊA
+                 ==================================================================== -->
+            <section class="slide" data-slide="6" data-title="Quy Tắc Chống Bịa">
+                <div class="slide-header">
+                    <div class="brand-badge"><span class="box-icon"></span> CES GLOBAL AEC</div>
+                    <div class="session-tag">PHẦN 2: <span>TƯ DUY ĐÓNG GÓI SKILL</span></div>
+                </div>
+                <div class="slide-title-wrap">
+                    <div class="slide-category">AN TOÀN HỒ SƠ KỸ THUẬT</div>
+                    <h2 class="slide-title">Quy Tắc Chống Bịa: <span>Zero-Hallucination Trong Kỹ Thuật</span></h2>
+                    <p class="slide-subtitle">Trong xây dựng: Thà nói "Tài liệu không nói" còn hơn bịa ra một con số gây sập công trình hoặc phạt hợp đồng.</p>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-3col">
+                        <div class="swiss-card reveal">
+                            <div class="card-num">01 / CITATION MANDATE</div>
+                            <div class="card-title">Dẫn Nguồn Từng Trang</div>
+                            <div class="card-text">Mọi thông số kỹ thuật (mác bê tông, mác thép, độ sụt, giới hạn chịu lửa EI) bắt buộc phải kèm nguồn: <code>[Tên file, Mục, Số trang]</code>. Không chấp nhận trích dẫn vu vơ.</div>
+                        </div>
+                        <div class="swiss-card highlight reveal">
+                            <div class="card-num">02 / CHẶN SUY ĐOÁN TUYỆT ĐỐI</div>
+                            <div class="card-title">Không Có = Nói Không Có</div>
+                            <div class="card-text">Nếu tài liệu không nêu mức phạt, không nêu đơn giá hoặc thiếu chiều cao đài móng, AI bắt buộc phải ghi: <code>[Tài liệu không đề cập — Cần Kỹ sư trưởng phê duyệt]</code>.</div>
+                        </div>
+                        <div class="swiss-card reveal">
+                            <div class="card-num">03 / ĐỐI SOÁT ĐA TẦNG</div>
+                            <div class="card-title">Cảnh Báo Vênh Pháp Lý</div>
+                            <div class="card-text">Khi có sự xung đột giữa 2 tài liệu, AI không được tự ý chọn theo một bên mà phải lập Bảng đối chiếu mâu thuẫn và đề xuất phát hành Phiếu RFI chính thức.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================================
+                 SLIDE 07: LIVE DEMO LƯỢT 1
+                 ==================================================================== -->
+            <section class="slide" data-slide="7" data-title="Demo Lượt 1: Tóm Tắt Thường">
+                <div class="slide-header">
+                    <div class="brand-badge"><span class="box-icon"></span> CES GLOBAL AEC</div>
+                    <div class="session-tag">PHẦN 3: <span>LIVE DEMO 5 LƯỢT CHAT THỊ PHẠM</span></div>
+                </div>
+                <div class="slide-title-wrap">
+                    <div class="slide-category">LƯỢT 1 / 5 TRONG DEMO THỰC CHIẾN</div>
+                    <h2 class="slide-title">Lượt 1: Tóm Tắt Thông Thường ➔ <span>Thấy Ngay Bế Tắc</span></h2>
+                    <p class="slide-subtitle">Nạp file PDF mẫu <code>demo/01_Chi_Dan_Ky_Thuat_PCCC_GreenTech_Tower.pdf</code> và hỏi theo thói quen.</p>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-2col">
+                        <div class="terminal-box reveal">
+                            <div class="terminal-header">
+                                <div class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                                <div class="terminal-title">Prompt Lượt 1</div>
+                            </div>
+                            <div class="terminal-body">
+<span class="cmd">&gt; Tóm tắt giúp tôi các yêu cầu kỹ thuật đối với hệ thống cửa chống cháy trong tệp tài liệu: demo/01_Chi_Dan_Ky_Thuat_PCCC_GreenTech_Tower.pdf</span>
+
+<span class="comment"># Kết quả trả về của AI:</span>
+- Cửa chống cháy cần đảm bảo an toàn PCCC theo quy chuẩn.
+- Cửa làm bằng thép sơn tĩnh điện, tự động đóng.
+- Có phụ kiện bản lề, khóa thoát hiểm.
+- Cần có chứng chỉ kiểm định PCCC theo quy định.
+                            </div>
+                        </div>
+                        <div class="swiss-card highlight reveal">
+                            <div class="card-num">NHẬN XÉT CỦA GIẢNG VIÊN</div>
+                            <div class="card-title">Vì Sao Chưa Thể Dùng Được?</div>
+                            <ul class="card-list">
+                                <li>❌ <strong>Không có chỉ số kỹ thuật:</strong> Giới hạn chịu lửa EI bao nhiêu phút? Thép dày bao nhiêu mm? Tỷ trọng bông Rockwool bao nhiêu?</li>
+                                <li>❌ <strong>Không có tiêu chuẩn viện dẫn:</strong> Áp dụng QCVN 06:2022 hay TCVN 9383:2012?</li>
+                                <li>❌ <strong>Không có số trang:</strong> Kỹ sư mang bản này ra hiện trường không biết lật trang nào để đối chiếu với nhà cung cấp.</li>
+                            </ul>
+                            <div class="badge-tag badge-red" style="margin-top: 14px;">BẮT BUỘC PHẢI HỎI TIẾP LƯỢT 2!</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================================
+                 SLIDE 08: LIVE DEMO LƯỢT 2
+                 ==================================================================== -->
+            <section class="slide" data-slide="8" data-title="Demo Lượt 2: Bóc Tách Chi Tiết">
+                <div class="slide-header">
+                    <div class="brand-badge"><span class="box-icon"></span> CES GLOBAL AEC</div>
+                    <div class="session-tag">PHẦN 3: <span>LIVE DEMO 5 LƯỢT CHAT THỊ PHẠM</span></div>
+                </div>
+                <div class="slide-title-wrap">
+                    <div class="slide-category">LƯỢT 2 / 5 TRONG DEMO THỰC CHIẾN</div>
+                    <h2 class="slide-title">Lượt 2: Ép Bóc Tách <span>Quy Cách Cấu Tạo Vật Liệu</span></h2>
+                    <p class="slide-subtitle">Kỹ sư bắt đầu ép AI đi sâu vào từng thông số cấu tạo chi tiết của bộ cửa.</p>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-2col">
+                        <div class="terminal-box reveal">
+                            <div class="terminal-header">
+                                <div class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                                <div class="terminal-title">Prompt Lượt 2</div>
+                            </div>
+                            <div class="terminal-body">
+<span class="cmd">&gt; Chưa đủ chi tiết. Hãy đọc kỹ Mục 5 (Điều 5.3) và bóc tách cụ thể:
+1. Độ dày thép khung và thép cánh.
+2. Quy cách lõi cách nhiệt (loại vật liệu, tỷ trọng kg/m³, tấm chống cháy bổ sung).
+3. Các phụ kiện kim khí bắt buộc.
+4. Tiêu chuẩn thử nghiệm chịu lửa viện dẫn.</span>
+
+<span class="ok">✓ AI bóc tách chính xác:</span>
+- Thép khung: 1.5mm | Thép cánh: 1.2mm mạ kẽm.
+- Lõi: Bông Rockwool &gt;= 120 kg/m³ + Tấm Magie Oxit (MgO) 5mm.
+- Phụ kiện: Bản lề SUS 304 (4 bản lề/cánh), tay co EN 1154, panic bar.
+- Tiêu chuẩn: QCVN 06:2022/BXD, TCVN 9383:2012, BS EN 1634-3.
+                            </div>
+                        </div>
+                        <div class="swiss-card reveal">
+                            <div class="card-num">BÀI HỌC SƯ PHẠM</div>
+                            <div class="card-title">Mục "Ý Chính Chi Tiết" Trong Skill</div>
+                            <div class="card-text">
+                                Lượt 2 này cho học viên thấy: Muốn AI trả lời sâu, ta phải ép nó bằng các từ khóa chuyên ngành (thép mạ kẽm, tỷ trọng bông, tấm MgO, tiêu chuẩn BS EN).
+                            </div>
+                            <div style="margin-top: 18px; padding: 14px; background: #eff6ff; border-radius: 8px; border-left: 4px solid var(--swiss-navy);">
+                                <strong>Ghi chú lên bảng:</strong> Lượt 2 sau này sẽ trở thành mục <code>PHẦN 1: TÓM TẮT QUY CÁCH VẬT TƯ CỐT LÕI</code> trong file SKILL.md.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================================
+                 SLIDE 09: LIVE DEMO LƯỢT 3
+                 ==================================================================== -->
+            <section class="slide" data-slide="9" data-title="Demo Lượt 3: Ma Trận Nghiệm Thu">
+                <div class="slide-header">
+                    <div class="brand-badge"><span class="box-icon"></span> CES GLOBAL AEC</div>
+                    <div class="session-tag">PHẦN 3: <span>LIVE DEMO 5 LƯỢT CHAT THỊ PHẠM</span></div>
+                </div>
+                <div class="slide-title-wrap">
+                    <div class="slide-category">LƯỢT 3 / 5 TRONG DEMO THỰC CHIẾN</div>
+                    <h2 class="slide-title">Lượt 3: Chuẩn Hóa <span>Ma Trận Yêu Cầu Nghiệm Thu 6 Cột</span></h2>
+                    <p class="slide-subtitle">Bàn giao tài liệu kiểm soát vật tư đầu vào chuẩn mực cho Kỹ sư hiện trường & QA/QC.</p>
+                </div>
+                <div class="slide-body">
+                    <div class="swiss-card reveal" style="padding: 20px;">
+                        <table class="swiss-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">STT</th>
+                                    <th>Cấu Phần</th>
+                                    <th>Quy Cách Yêu Cầu</th>
+                                    <th>Tiêu Chuẩn Áp Dụng</th>
+                                    <th>Hồ Sơ Nghiệm Thu Bắt Buộc</th>
+                                    <th>Trích Dẫn Trang</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>01</strong></td>
+                                    <td>Cửa thép buồng thang N1/N2</td>
+                                    <td>Cửa thép chống cháy <strong>EI 90</strong>, dày 50mm, thép cánh 1.2mm</td>
+                                    <td>QCVN 06:2022/BXD<br>TCVN 9383:2012</td>
+                                    <td>Giấy chứng nhận kiểm định của Cục Cảnh sát PCCC & CNCH; Biên bản đốt mẫu EI 90</td>
+                                    <td><span class="badge-tag badge-red">Điều 5.3, Trang 42</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>02</strong></td>
+                                    <td>Lõi cách nhiệt</td>
+                                    <td>Rockwool tỷ trọng &gt;= 120 kg/m³ + 2 mặt tấm MgO dày 5mm</td>
+                                    <td>ASTM C612 / BS EN 13162</td>
+                                    <td>Chứng chỉ CO/CQ xuất xưởng, kết quả thử tỷ trọng mẫu cắt tại hiện trường</td>
+                                    <td><span class="badge-tag badge-red">Mục 5.3.2, Trang 42</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>03</strong></td>
+                                    <td>Gioăng ngăn khói</td>
+                                    <td>Gioăng kép silicone + than chì nở nhiệt &gt; 150°C</td>
+                                    <td>BS EN 1634-3</td>
+                                    <td>Chứng nhận độ kín khói của nhà sản xuất</td>
+                                    <td><span class="badge-tag badge-red">Mục 5.3.2, Trang 42</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================================
+                 SLIDE 10: LIVE DEMO LƯỢT 4
+                 ==================================================================== -->
+            <section class="slide" data-slide="10" data-title="Demo Lượt 4: Bắt Lỗi Mâu Thuẫn">
+                <div class="slide-header">
+                    <div class="brand-badge"><span class="box-icon"></span> CES GLOBAL AEC</div>
+                    <div class="session-tag">PHẦN 3: <span>LIVE DEMO 5 LƯỢT CHAT THỊ PHẠM</span></div>
+                </div>
+                <div class="slide-title-wrap">
+                    <div class="slide-category">LƯỢT 4 / 5 — KHOẢNH KHẮC "CÚ NỔ" CỦA BUỔI HỌC</div>
+                    <h2 class="slide-title">Lượt 4: Rà Soát Đa Hồ Sơ ➔ <span>Bắt Lỗi Vênh EI 90 vs EI 60</span></h2>
+                    <p class="slide-subtitle">Nạp thêm <code>demo/02_Thuyet_Minh_Ban_Ve_KT102.pdf</code> để AI thực hiện đối chiếu chéo.</p>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-2col">
+                        <div class="swiss-card highlight reveal">
+                            <div class="card-num" style="color: var(--swiss-red);">TÀI LIỆU A: CHỈ DẪN PCCC (TRANG 42)</div>
+                            <div class="card-title" style="color: var(--swiss-red);">Quy Định: Cửa Thoát Hiểm EI 90</div>
+                            <div class="card-text">
+                                Căn cứ QCVN 06:2022/BXD cho nhà cao trên 50m, cửa mở vào buồng thang bộ thoát hiểm loại N1 và N2 bắt buộc phải là cửa thép chống cháy đạt <strong>EI 90</strong> (Rockwool 120 kg/m³ + MgO).
+                            </div>
+                            <div class="badge-tag badge-red" style="margin-top: 14px;">BẮT BUỘC THEO PHÁP LUẬT PCCC</div>
+                        </div>
+
+                        <div class="swiss-card highlight reveal">
+                            <div class="card-num" style="color: var(--swiss-amber);">TÀI LIỆU B: BẢN VẼ KT-102 (TRANG 15)</div>
+                            <div class="card-title" style="color: var(--swiss-amber);">Ghi Chú: Cửa D-08 Chỉ Là EI 60</div>
+                            <div class="card-text">
+                                Bảng thống kê cửa đi tầng 1-5 ghi chú cửa D-08 vào buồng thang thoát hiểm trục (2-3) chỉ yêu cầu <strong>EI 60</strong> (Rockwool 100 kg/m³, không có tấm MgO). Dự toán tính 2.450.000 VNĐ/m².
+                            </div>
+                            <div class="badge-tag badge-amber" style="margin-top: 14px;">SAI LỆCH HỒ SƠ THIẾT KẾ</div>
+                        </div>
+                    </div>
+
+                    <div class="reveal" style="margin-top: 20px; padding: 18px 24px; background: #fff1f2; border: 2px solid #f43f5e; border-radius: var(--radius-md);">
+                        <strong style="color: #be123c; font-size: 20px;">🚨 CẢNH BÁO HẬU QUẢ PHÁP LÝ & CHI PHÍ:</strong>
+                        <p style="color: #4c0519; font-size: 18px; margin-top: 4px;">
+                            Nếu Kỹ sư hiện trường không phát hiện ra mà đặt hàng gia công 10 bộ cửa theo bản vẽ EI 60: <strong>Công trình chắc chắn bị đình chỉ nghiệm thu PCCC khi bàn giao</strong>. Nếu đổi sang EI 90 sau này, chi phí sẽ đội thêm 55% và trễ tiến độ tối thiểu 45 ngày!
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================================
+                 SLIDE 11: LIVE DEMO LƯỢT 5
+                 ==================================================================== -->
+            <section class="slide" data-slide="11" data-title="Demo Lượt 5: Chống Bịa & RFI">
+                <div class="slide-header">
+                    <div class="brand-badge"><span class="box-icon"></span> CES GLOBAL AEC</div>
+                    <div class="session-tag">PHẦN 3: <span>LIVE DEMO 5 LƯỢT CHAT THỊ PHẠM</span></div>
+                </div>
+                <div class="slide-title-wrap">
+                    <div class="slide-category">LƯỢT 5 / 5 TRONG DEMO THỰC CHIẾN</div>
+                    <h2 class="slide-title">Lượt 5: Thử Chống Bịa & <span>Tự Động Xuất Phiếu RFI</span></h2>
+                    <p class="slide-subtitle">Thử thách tính trung thực của AI và xuất văn bản hành chính gửi Tư vấn thiết kế & Chủ đầu tư.</p>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-2col">
+                        <div class="swiss-card reveal">
+                            <div class="card-num">THỬ THÁCH CHỐNG BỊA SỐ LIỆU</div>
+                            <div class="card-title">Thử Hỏi Thông Tin Không Có</div>
+                            <div class="card-text">
+                                Giảng viên hỏi: <em>"Trong 2 tài liệu trên, mức phạt tiền nếu giao chậm cửa là bao nhiêu?"</em>
+                            </div>
+                            <div style="margin-top: 14px; padding: 12px; background: #ecfdf5; border-radius: 8px; border-left: 4px solid var(--swiss-emerald);">
+                                <strong style="color: #065f46;">Phản hồi chuẩn của AI:</strong><br>
+                                "Tài liệu không đề cập mức phạt tiền cụ thể đối với việc giao chậm cửa. Đề nghị tham chiếu Điều 12 của Hợp đồng thi công chính."
+                            </div>
+                        </div>
+
+                        <div class="swiss-card navy-highlight reveal">
+                            <div class="card-num">PHIẾU RFI-ARC-001 TỰ ĐỘNG SINH</div>
+                            <div class="card-title">Nội Dung Chuẩn Thể Thức</div>
+                            <div class="card-text" style="font-size: 17px; line-height: 1.5;">
+                                <strong>Tiêu đề:</strong> Về việc làm rõ tiêu chuẩn giới hạn chịu lửa cửa D-08.<br>
+                                <strong>Vấn đề:</strong> Mâu thuẫn giữa Spec Trang 42 (EI 90) và KT-102 Trang 15 (EI 60).<br>
+                                <strong>Đánh giá:</strong> Nguy cơ không đủ điều kiện nghiệm thu theo QCVN 06:2022.<br>
+                                <strong>Đề xuất:</strong> Thống nhất điều chỉnh toàn bộ cửa D-08 sang EI 90 và phê duyệt dự toán phát sinh trước ngày 20/06/2026.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================================
+                 SLIDE 12: ĐÓNG GÓI THÀNH SKILL
+                 ==================================================================== -->
+            <section class="slide" data-slide="12" data-title="Đóng Gói Thành Skill">
+                <div class="slide-header">
+                    <div class="brand-badge"><span class="box-icon"></span> CES GLOBAL AEC</div>
+                    <div class="session-tag">PHẦN 4: <span>ĐÓNG GÓI & TÁI SỬ DỤNG SKILL</span></div>
+                </div>
+                <div class="slide-title-wrap">
+                    <div class="slide-category">BƯỚC CHUYỂN HÓA QUY TRÌNH</div>
+                    <h2 class="slide-title">Đóng Gói 5 Lượt Chat <span>Thành Skill Đầu Tay</span></h2>
+                    <p class="slide-subtitle">Biến toàn bộ công sức hỏi đáp vừa rồi thành tài sản số vĩnh viễn của riêng bạn.</p>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-split-64">
+                        <div class="terminal-box reveal">
+                            <div class="terminal-header">
+                                <div class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                                <div class="terminal-title">Prompt Đóng Gói Thành Skill</div>
+                            </div>
+                            <div class="terminal-body" style="font-size: 16px;">
+<span class="cmd">&gt; Tôi thấy quy trình vừa rồi rất chuẩn. Hãy đóng gói toàn bộ quy trình rà soát hồ sơ, đối chiếu mâu thuẫn và lập RFI này thành một Skill cho tôi.
+Lưu vào: .claude/skills/soat-ho-so-ky-thuat/SKILL.md
+Dòng description ghi rõ: "Dùng khi cần rà soát chỉ dẫn kỹ thuật, đối chiếu mâu thuẫn giữa bản vẽ và thuyết minh, lập ma trận nghiệm thu vật tư và sinh phiếu RFI."</span>
+
+<span class="ok">✓ Created: .claude/skills/soat-ho-so-ky-thuat/SKILL.md</span>
+<span class="ok">✓ Skill registered successfully into Workspace!</span>
+                            </div>
+                        </div>
+
+                        <div class="swiss-card reveal">
+                            <div class="card-num">TỔNG KẾT BƯỚC ĐÓNG GÓI</div>
+                            <div class="card-title">5 Lượt Chat ➔ 5 Mục SKILL.md</div>
+                            <div class="card-list" style="gap: 12px; font-size: 17px;">
+                                <li>Lượt 2 ➔ <code>1. TÓM TẮT QUY CÁCH VẬT TƯ</code></li>
+                                <li>Lượt 3 ➔ <code>2. MA TRẬN YÊU CẦU NGHIỆM THU</code></li>
+                                <li>Lượt 4 ➔ <code>3. BẢNG ĐỐI CHIẾU MÂU THUẪN</code></li>
+                                <li>Lượt 5 ➔ <code>4. DỰ THẢO PHIẾU RFI LÀM RÕ</code></li>
+                                <li>Lượt 5 ➔ <code>5. QUY TẮC CHỐNG BỊA & SỐ TRANG</code></li>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================================
+                 SLIDE 13: TÁI SỬ DỤNG THẦN TỐC
+                 ==================================================================== -->
+            <section class="slide" data-slide="13" data-title="Kiểm Chứng Tái Sử Dụng">
+                <div class="slide-header">
+                    <div class="brand-badge"><span class="box-icon"></span> CES GLOBAL AEC</div>
+                    <div class="session-tag">PHẦN 4: <span>ĐÓNG GÓI & TÁI SỬ DỤNG SKILL</span></div>
+                </div>
+                <div class="slide-title-wrap">
+                    <div class="slide-category">SỨC MẠNH CỦA SKILL</div>
+                    <h2 class="slide-title">Kiểm Chứng Tái Sử Dụng: <span>Chỉ 1 Câu Lệnh Duy Nhất!</span></h2>
+                    <p class="slide-subtitle">Nạp một tài liệu hoàn toàn mới: <code>demo/03_Chi_Dan_Thi_Cong_Be_Tong_Vach_Ham.pdf</code>.</p>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-split-73">
+                        <div class="terminal-box reveal">
+                            <div class="terminal-header">
+                                <div class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                                <div class="terminal-title">Test Tính Tái Dùng Của Skill</div>
+                            </div>
+                            <div class="terminal-body">
+<span class="cmd">&gt; Rà soát yêu cầu kỹ thuật và nghiệm thu trong demo/03_Chi_Dan_Thi_Cong_Be_Tong_Vach_Ham.pdf</span>
+
+<span class="key">⚡ Auto-activating skill: soat-ho-so-ky-thuat</span>
+<span class="ok">✓ Xuất Ma trận Bê tông Vách hầm (Trang 48):</span>
+- Cường độ nén: B35 (Mác 450 daN/cm²) | Chuẩn: TCVN 5574:2018
+- Cấp chống thấm: W10 | Chuẩn: TCVN 3118:1993
+- Độ sụt: 16 ± 2 cm | Phụ gia giảm nước bù co ngót
+- Lớp bê tông bảo vệ cốt thép: C_min = 40 mm
+- Hồ sơ: Chứng chỉ trạm trộn, phiếu Las nén mẫu R7 và R28.
+                            </div>
+                        </div>
+
+                        <div class="swiss-card highlight reveal">
+                            <div class="card-num">SO SÁNH HIỆU SUẤT</div>
+                            <div class="card-title">5 Lượt Chat vs 1 Lần Gõ</div>
+                            <div class="card-text">
+                                Lần đầu với hồ sơ PCCC, bạn mất **5 lượt chat** liên tục mới ra đủ cấu trúc.<br><br>
+                                Giờ đây với hồ sơ Bê tông, nhờ có Skill, bạn chỉ cần gõ **đúng 1 câu** ➔ Ra ngay bảng ma trận chuẩn chỉnh trong vòng 10 giây!
+                            </div>
+                            <div class="badge-tag badge-green" style="margin-top: 14px; font-size: 16px;">TIẾT KIỆM 90% THỜI GIAN</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================================
+                 SLIDE 14: NORTH STAR: VN-AUTOCAD-SKILL
+                 ==================================================================== -->
+            <section class="slide" data-slide="14" data-title="North Star: vn-autocad-skill">
+                <div class="slide-header">
+                    <div class="brand-badge"><span class="box-icon"></span> CES GLOBAL AEC</div>
+                    <div class="session-tag">PHẦN 5: <span>HỆ SINH THÁI SKILL CHUYÊN SÂU</span></div>
+                </div>
+                <div class="slide-title-wrap">
+                    <div class="slide-category">NORTH STAR — HÌNH MẪU ĐỈNH CAO</div>
+                    <h2 class="slide-title">Khám Phá Repo: <span>andyluu98/vn-autocad-skill</span></h2>
+                    <p class="slide-subtitle">Bộ Skill & Agent Claude Code dựng trọn vẹn bộ hồ sơ bản vẽ thiết kế thi công nhà ở chuẩn TCVN.</p>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-3col">
+                        <div class="swiss-card reveal">
+                            <div class="card-num">01 / THÀNH PHẦN HỆ THỐNG</div>
+                            <div class="card-title">8 Skill + 5 Agent TCVN</div>
+                            <div class="card-text">Bao phủ toàn diện các bộ môn: Kiến trúc, Kết cấu, Cơ điện (MEP), Soát bản vẽ 3 tầng, Bố cục tờ giấy A3 và Lập dự toán Excel tự động liên kết khối lượng.</div>
+                        </div>
+                        <div class="swiss-card highlight reveal">
+                            <div class="card-num">02 / SẢN PHẨM XUẤT RA</div>
+                            <div class="card-title">Hồ Sơ 26 Tờ A3 Hoàn Chỉnh</div>
+                            <div class="card-text">Xuất ra file DXF/DWG gồm 15 tờ KT, 5 tờ KC, 6 tờ ME. Tự động sinh bảng thống kê thép từ kích thước cấu kiện và xuất file Excel dự toán 100% Times New Roman.</div>
+                        </div>
+                        <div class="swiss-card reveal">
+                            <div class="card-num">03 / THƯ VIỆN PYTHON VNCAD</div>
+                            <div class="card-title">Cốt Lõi Tự Động Hóa</div>
+                            <div class="card-text">Dựa trên nền tảng thư viện Python mã nguồn mở <code>vncad</code> (ezdxf, matplotlib, openpyxl) kết nối trực tiếp với AutoCAD qua giao thức MCP Server.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================================
+                 SLIDE 15: QUY TRÌNH 11 BƯỚC
+                 ==================================================================== -->
+            <section class="slide" data-slide="15" data-title="Quy Trình 11 Bước Lập Hồ Sơ">
+                <div class="slide-header">
+                    <div class="brand-badge"><span class="box-icon"></span> CES GLOBAL AEC</div>
+                    <div class="session-tag">PHẦN 5: <span>HỆ SINH THÁI SKILL CHUYÊN SÂU</span></div>
+                </div>
+                <div class="slide-title-wrap">
+                    <div class="slide-category">LUỒNG VẬN HÀNH THỰC CHIẾN</div>
+                    <h2 class="slide-title">Quy Trình 11 Bước: <span>Từ Đề Bài Đến Bản Vẽ & Dự Toán</span></h2>
+                    <p class="slide-subtitle">Mỗi bước đều có cửa soát chất lượng (Quality Gate) nghiêm ngặt trước khi chuyển sang bước tiếp theo.</p>
+                </div>
+                <div class="slide-body">
+                    <div class="swiss-card reveal" style="padding: 24px;">
+                        <div class="terminal-body" style="font-size: 18px; line-height: 1.8; color: #0f172a; background: transparent; padding: 0;">
+<span class="cmd">[1 Tiếp nhận yêu cầu]</span> ──➔ <span class="cmd">[2 Dữ liệu công trình]</span> ──➔ <span class="cmd">[3 Danh mục tờ]</span> ──➔ <span class="cmd">[4 Bố cục Model Space]</span>
+                                                                        │
+        ┌───────────────────────────────────────────────────────────────┴──────────────────────────────┐
+        ▼                                                               ▼                              ▼
+<span class="key">[5 Triển khai Kiến trúc]</span>                                     <span class="key">[6 Triển khai Kết cấu]</span>         <span class="key">[7 Triển khai Cơ điện]</span>
+(Mặt bằng, đứng, cắt, WC, thang)                             (Móng, dầm sàn, bảng thép)    (Cấp thoát nước, sơ đồ tủ điện)
+        │                                                               │                              │
+        └───────────────────────────────────────────────────────────────┬──────────────────────────────┘
+                                                                        ▼
+                                                         <span class="cmd">[8 Dựng tờ giấy Layout A3]</span>
+                                                                        │
+                                                                        ▼
+                                                         <span class="err">[9 Soát lỗi 3 tầng]</span> ──(nếu còn lỗi)──➔ [Quay lại sửa 5, 6, 7]
+                                                                        │ (khi đạt chuẩn)
+                                                                        ▼
+                                                         <span class="ok">[10 Xuất Dự toán Excel]</span>
+                                                                        │
+                                                                        ▼
+                                                         <span class="ok">[11 Bàn giao DWG, PDF & Báo cáo]</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================================
+                 SLIDE 16: BẢNG PHÂN VAI 8 SKILL
+                 ==================================================================== -->
+            <section class="slide" data-slide="16" data-title="8 Skill Chuyên Ngành">
+                <div class="slide-header">
+                    <div class="brand-badge"><span class="box-icon"></span> CES GLOBAL AEC</div>
+                    <div class="session-tag">PHẦN 5: <span>HỆ SINH THÁI SKILL CHUYÊN SÂU</span></div>
+                </div>
+                <div class="slide-title-wrap">
+                    <div class="slide-category">KIẾN TRÚC SKILL PACK DOANH NGHIỆP</div>
+                    <h2 class="slide-title">Bảng Phân Vai: <span>8 Skill Chuyên Ngành Trong Repo</span></h2>
+                    <p class="slide-subtitle">Cách các Skill đơn lẻ phối hợp thành một dây chuyền sản xuất hồ sơ tự động.</p>
+                </div>
+                <div class="slide-body">
+                    <div class="swiss-card reveal" style="padding: 18px 24px;">
+                        <table class="swiss-table">
+                            <thead>
+                                <tr>
+                                    <th>Tên Skill</th>
+                                    <th>Nhiệm Vụ Trọng Tâm</th>
+                                    <th>Đầu Ra Chính</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>vn-quy-trinh-ho-so</code></td>
+                                    <td>Tổng chỉ huy điều phối 11 bước, kiểm soát cổng bàn giao</td>
+                                    <td>Kế hoạch triển khai & phân việc cho các bộ môn</td>
+                                </tr>
+                                <tr>
+                                    <td><code>vn-kien-truc</code></td>
+                                    <td>Mặt bằng, mặt đứng, mặt cắt, khai triển thang, WC, lát gạch, trần</td>
+                                    <td>15 tờ bản vẽ Kiến trúc Layout A3</td>
+                                </tr>
+                                <tr>
+                                    <td><code>vn-ket-cau</code></td>
+                                    <td>Móng, dầm, cột, sàn, cầu thang và bảng thống kê cốt thép</td>
+                                    <td>05 tờ bản vẽ Kết cấu & Bảng thép tự động</td>
+                                </tr>
+                                <tr>
+                                    <td><code>vn-co-dien</code></td>
+                                    <td>Mặt bằng điện chiếu sáng, cấp thoát nước, sơ đồ nguyên lý tủ điện</td>
+                                    <td>06 tờ bản vẽ Cơ điện (MEP)</td>
+                                </tr>
+                                <tr>
+                                    <td><code>vn-soat-ban-ve</code></td>
+                                    <td>4 phép soát tự động: Nét cắt qua chữ, đo ô bao, kiểm tra số thanh thép</td>
+                                    <td>Báo cáo soát lỗi và đề xuất độ dời chữ</td>
+                                </tr>
+                                <tr>
+                                    <td><code>vn-du-toan</code></td>
+                                    <td>Bóc tách khối lượng từ bản vẽ, lập bảng tính chi phí dự toán</td>
+                                    <td>File Excel dự toán 100% Times New Roman</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================================
+                 SLIDE 17: BỘ LỆNH TẮT & PLUGIN
+                 ==================================================================== -->
+            <section class="slide" data-slide="17" data-title="Bộ Lệnh Tắt & Plugin">
+                <div class="slide-header">
+                    <div class="brand-badge"><span class="box-icon"></span> CES GLOBAL AEC</div>
+                    <div class="session-tag">PHẦN 5: <span>HỆ SINH THÁI SKILL CHUYÊN SÂU</span></div>
+                </div>
+                <div class="slide-title-wrap">
+                    <div class="slide-category">CÀI ĐẶT & KÍCH HOẠT</div>
+                    <h2 class="slide-title">Lệnh Tắt & Plugin: <span>Thao Tác Siêu Tốc Trong Claude Code</span></h2>
+                    <p class="slide-subtitle">Cách tích hợp trực tiếp repo vào máy tính của bạn và gọi lệnh dựng nhà.</p>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-2col">
+                        <div class="terminal-box reveal">
+                            <div class="terminal-header">
+                                <div class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                                <div class="terminal-title">Cài đặt Plugin Claude Code</div>
+                            </div>
+                            <div class="terminal-body" style="font-size: 16px;">
+<span class="comment"># Bước 1: Thêm repo vào marketplace</span>
+<span class="cmd">&gt; /plugin marketplace add andyluu98/vn-autocad-skill</span>
+
+<span class="comment"># Bước 2: Cài đặt plugin</span>
+<span class="cmd">&gt; /plugin install vn-autocad-skill@vn-autocad</span>
+
+<span class="comment"># Bước 3: Dựng bộ hồ sơ mới chỉ với 1 câu lệnh</span>
+<span class="cmd">&gt; /ho-so-moi nhà phố 4x16m, 3 tầng, 3 phòng ngủ, có gara ô tô</span>
+
+<span class="ok">✓ Đang kích hoạt 5 Agent chuyên môn...</span>
+<span class="ok">✓ Xuất 26 Layout A3 vào thư mục examples/out</span>
+                            </div>
+                        </div>
+
+                        <div class="swiss-card navy-highlight reveal">
+                            <div class="card-num">3 LỆNH TẮT QUAN TRỌNG</div>
+                            <div class="card-title">Thao Tác Cần Nhớ</div>
+                            <ul class="card-list" style="gap: 14px;">
+                                <li>
+                                    <code>/ho-so-moi &lt;mô tả&gt;</code>: Khởi tạo toàn bộ hồ sơ nhà phố, tự động hỏi lại các thông số còn thiếu (địa chất, chiều cao tầng, công năng).
+                                </li>
+                                <li>
+                                    <code>/soat-ban-ve</code>: Kích hoạt 4 phép soát tự động trong vài giây để phát hiện chữ bị đè, đường kích thước lỗi.
+                                </li>
+                                <li>
+                                    <code>/xuat-dwg</code>: Chuyển đổi định dạng DXF sang DWG chính thức thông qua AutoCAD MCP Server.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================================
+                 SLIDE 18: RANH GIỚI AN TOÀN PHÁP LÝ
+                 ==================================================================== -->
+            <section class="slide" data-slide="18" data-title="Ranh Giới An Toàn Pháp Lý">
+                <div class="slide-header">
+                    <div class="brand-badge"><span class="box-icon"></span> CES GLOBAL AEC</div>
+                    <div class="session-tag">PHẦN 5: <span>HỆ SINH THÁI SKILL CHUYÊN SÂU</span></div>
+                </div>
+                <div class="slide-title-wrap">
+                    <div class="slide-category">ĐẠO ĐỨC NGHỀ NGHIỆP & PHÁP LÝ</div>
+                    <h2 class="slide-title">Ranh Giới An Toàn: <span>AI Không Thay Kỹ Sư Có Chứng Chỉ</span></h2>
+                    <p class="slide-subtitle">Phân định rõ ràng trách nhiệm giữa công cụ AI tự động hóa và Kỹ sư chịu trách nhiệm pháp lý.</p>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-2col">
+                        <div class="swiss-card reveal" style="border-left: 6px solid var(--swiss-emerald);">
+                            <div class="card-num" style="color: var(--swiss-emerald);">NHỮNG GÌ AI & SKILL LÀM CỰC TỐT</div>
+                            <div class="card-title">Tự Động Hóa Tác Vụ Cấu Tạo</div>
+                            <ul class="card-list">
+                                <li>✔ Dựng hình học, lưới trục, tường, cột, cửa, thang theo quy chuẩn TCVN.</li>
+                                <li>✔ Thống kê chiều dài, số thanh thép theo kích thước hình học.</li>
+                                <li>✔ Soát lỗi chính tả, lỗi nét cắt qua chữ, lỗi đè layer tự động 100%.</li>
+                                <li>✔ Xuất bảng tính Excel dự toán Times New Roman công thức động.</li>
+                            </ul>
+                        </div>
+
+                        <div class="swiss-card highlight reveal" style="border-left: 6px solid var(--swiss-red);">
+                            <div class="card-num" style="color: var(--swiss-red);">NHỮNG GÌ TUYỆT ĐỐI KHÔNG GIAO CHO AI</div>
+                            <div class="card-title">Trách Nhiệm Kỹ Sư Pháp Lý</div>
+                            <ul class="card-list">
+                                <li>❌ <strong>Không thay tính toán nội lực:</strong> AI không chạy mô hình SAP/ETABS để tính mômen, lực cắt hay kiểm toán chọc thủng.</li>
+                                <li>❌ <strong>Không thay chữ ký người có chứng chỉ:</strong> Mọi hồ sơ xin phép và thi công phải do Kiến trúc sư, Kỹ sư chủ trì kiểm tra và ký đóng dấu.</li>
+                                <li>❌ <strong>Mọi thông số đề xuất:</strong> Đều phải có nhãn <em>"Cần Kỹ sư duyệt"</em> trước khi thi công.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================================
+                 SLIDE 19: THỰC HÀNH LAB 02
+                 ==================================================================== -->
+            <section class="slide" data-slide="19" data-title="Thực Hành Lab 02">
+                <div class="slide-header">
+                    <div class="brand-badge"><span class="box-icon"></span> CES GLOBAL AEC</div>
+                    <div class="session-tag">PHẦN 6: <span>THỰC HÀNH CHUYÊN SÂU TẠI LỚP</span></div>
+                </div>
+                <div class="slide-title-wrap">
+                    <div class="slide-category">HANDS-ON LAB 02 (35 PHÚT)</div>
+                    <h2 class="slide-title">Thực Hành: <span>Tự Tay Đóng Gói Skill Rà Soát Hồ Sơ</span></h2>
+                    <p class="slide-subtitle">Sử dụng bộ dữ liệu PDF mẫu trong thư mục <code>demo/</code> để hoàn thành Deliverable D2.</p>
+                </div>
+                <div class="slide-body">
+                    <div class="timer-card reveal">
+                        <div>
+                            <div style="font-family: var(--font-mono); font-size: 16px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">
+                                THỜI GIAN LÀM BÀI THỰC HÀNH
+                            </div>
+                            <div class="timer-clock" id="labTimer">35:00</div>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="hud-btn hud-btn-primary" id="btnStartTimer">Bắt đầu</button>
+                            <button class="hud-btn" id="btnResetTimer">Đặt lại</button>
+                        </div>
+                    </div>
+
+                    <div class="grid-3col">
+                        <div class="swiss-card reveal">
+                            <div class="card-num">BƯỚC 1 (10 PHÚT)</div>
+                            <div class="card-title">Tạo Thư Mục Skill</div>
+                            <div class="card-text">Tạo thư mục <code>.claude/skills/soat-ho-so-ky-thuat/</code> và soạn file <code>SKILL.md</code> với đầy đủ 2 trường YAML name và description.</div>
+                        </div>
+                        <div class="swiss-card reveal">
+                            <div class="card-num">BƯỚC 2 (15 PHÚT)</div>
+                            <div class="card-title">Chạy Rà Soát 2 File PDF</div>
+                            <div class="card-text">Nạp <code>01_Chi_Dan_PCCC.pdf</code> và <code>02_Ban_Ve_KT102.pdf</code>. Kích hoạt Skill để tự động xuất bảng Ma trận và Phiếu RFI mâu thuẫn EI 90 vs EI 60.</div>
+                        </div>
+                        <div class="swiss-card highlight reveal">
+                            <div class="card-num">BƯỚC 3 (10 PHÚT)</div>
+                            <div class="card-title">Test Tái Dùng & Nộp Bài</div>
+                            <div class="card-text">Nạp cặp kiểm chứng <code>03+04 (Vách hầm)</code> hoặc đề bài nâng cao <code>05+06 (Thép R120 vs R60)</code> để kiểm chứng Skill tự động hóa đa dự án. Xuất nộp 2 file kết quả D2.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================================
+                 SLIDE 20: TIÊU CHÍ NGHIỆM THU D2
+                 ==================================================================== -->
+            <section class="slide" data-slide="20" data-title="Tiêu Chí Nghiệm Thu D2">
+                <div class="slide-header">
+                    <div class="brand-badge"><span class="box-icon"></span> CES GLOBAL AEC</div>
+                    <div class="session-tag">PHẦN 6: <span>THỰC HÀNH CHUYÊN SÂU TẠI LỚP</span></div>
+                </div>
+                <div class="slide-title-wrap">
+                    <div class="slide-category">RUBRIC CHẤM ĐIỂM</div>
+                    <h2 class="slide-title">Tiêu Chí Nghiệm Thu <span>Sản Phẩm Deliverable D2</span></h2>
+                    <p class="slide-subtitle">Kiểm tra chéo giữa các học viên theo Bảng Rubric chuẩn mực của CES Global.</p>
+                </div>
+                <div class="slide-body">
+                    <div class="swiss-card reveal" style="padding: 20px 24px;">
+                        <table class="swiss-table">
+                            <thead>
+                                <tr>
+                                    <th>Hạng Mục Nghiệm Thu</th>
+                                    <th>Yêu Cầu Đạt Chuẩn (Pass)</th>
+                                    <th>Cảnh Báo Không Đạt (Fail)</th>
+                                    <th>Trọng Số</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>1. Cấu hình Skill</strong></td>
+                                    <td>Tạo đúng thư mục <code>.claude/skills/</code>; description rõ ràng; Claude tự nạp khi chat tự nhiên.</td>
+                                    <td>Sai đường dẫn; description mờ khiến Claude không tự nạp được.</td>
+                                    <td>25%</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>2. Ma trận Nghiệm thu</strong></td>
+                                    <td>Đủ 6 cột; bóc tách đủ mác, tỷ trọng, độ dày, viện dẫn đúng QCVN/TCVN; dẫn nguồn số trang chính xác.</td>
+                                    <td>Tóm tắt qua loa, thiếu số trang hoặc không có tiêu chuẩn nghiệm thu.</td>
+                                    <td>30%</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>3. Phát hiện mâu thuẫn</strong></td>
+                                    <td>Chỉ ra chính xác sai lệch EI 90 (Trang 42) vs EI 60 (Trang 15); phân tích rủi ro đình chỉ nghiệm thu.</td>
+                                    <td>Không phát hiện ra sự mâu thuẫn giữa 2 tài liệu.</td>
+                                    <td>25%</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>4. Phiếu RFI & Chống bịa</strong></td>
+                                    <td>Soạn RFI chuẩn 4 phần theo thể thức; câu hỏi bẫy trả lời đúng "Tài liệu không đề cập".</td>
+                                    <td>Tự bịa ra mức phạt chậm tiến độ hoặc văn phong thiếu chuyên nghiệp.</td>
+                                    <td>20%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================================
+                 SLIDE 21: TỔNG KẾT BÀI HỌC
+                 ==================================================================== -->
+            <section class="slide" data-slide="21" data-title="Tổng Kết Buổi 02">
+                <div class="slide-header">
+                    <div class="brand-badge"><span class="box-icon"></span> CES GLOBAL AEC</div>
+                    <div class="session-tag">PHẦN 7: <span>TỔNG KẾT & CHUYỂN GIAO</span></div>
+                </div>
+                <div class="slide-title-wrap">
+                    <div class="slide-category">KEY TAKEAWAYS</div>
+                    <h2 class="slide-title">Tổng Kết Buổi 02: <span>03 Từ Khóa Cốt Tử</span></h2>
+                    <p class="slide-subtitle">Hành trang cốt lõi để kỹ sư tự động hóa mọi quy trình kiểm soát hồ sơ dự án.</p>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-3col">
+                        <div class="swiss-card navy-highlight reveal">
+                            <div class="card-num" style="color: var(--swiss-navy);">01 / TỪ KHÓA: SKILL</div>
+                            <div class="card-title">SOP Dạng Số Cho AI</div>
+                            <div class="card-text">Bất kỳ việc gì lặp lại quá 2 lần (soát spec, lập ma trận vật tư, kiểm tra an toàn): Đừng gõ lại prompt mà hãy **đóng gói thành Skill** trong <code>.claude/skills/</code>.</div>
+                        </div>
+                        <div class="swiss-card highlight reveal">
+                            <div class="card-num" style="color: var(--swiss-red);">02 / TỪ KHÓA: CHỐNG BỊA</div>
+                            <div class="card-title">Grounding Có Số Trang</div>
+                            <div class="card-text">Hồ sơ kỹ thuật là pháp lý và an toàn sinh mạng. Luôn dặn AI: Có dẫn chứng số trang mới tin, không có thông tin thì ghi rõ <code>Tài liệu không đề cập</code>.</div>
+                        </div>
+                        <div class="swiss-card reveal">
+                            <div class="card-num" style="color: var(--swiss-emerald);">03 / TỪ KHÓA: HỆ THỐNG</div>
+                            <div class="card-title">Tư Duy Ecosystem</div>
+                            <div class="card-text">Một skill đơn lẻ giúp bạn tiết kiệm vài giờ. Nhưng ghép 8 skill thành hệ thống như <code>vn-autocad-skill</code> sẽ giúp bạn dựng cả bộ hồ sơ 26 tờ A3 trong vài chục phút!</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================================
+                 SLIDE 22: PREVIEW BUỔI 03
+                 ==================================================================== -->
+            <section class="slide" data-slide="22" data-title="Cầu Nối Sang Buổi 03">
+                <div class="slide-header">
+                    <div class="brand-badge"><span class="box-icon"></span> CES GLOBAL AEC</div>
+                    <div class="session-tag">PHẦN 7: <span>BƯỚC TIẾP THEO</span></div>
+                </div>
+                <div class="slide-title-wrap">
+                    <div class="slide-category">XEM TRƯỚC BUỔI 03</div>
+                    <h2 class="slide-title">Bước Sang Buổi 03: <span>Điều Khiển AutoCAD Tự Động Bằng AI</span></h2>
+                    <p class="slide-subtitle">Từ hồ sơ kỹ thuật đã làm sạch, chúng ta sẽ bắt đầu biến ý tưởng thành những nét vẽ CAD tự động!</p>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-split-73">
+                        <div class="swiss-card navy-highlight reveal">
+                            <div class="card-num">CHUYÊN ĐỀ BUỔI 03</div>
+                            <div class="card-title">Từ Design Brief Đến Sinh Mã AutoLISP Dựng Bản Vẽ</div>
+                            <div class="card-list" style="gap: 16px; margin-top: 14px;">
+                                <li>📐 <strong>Sinh phương án mặt bằng sơ bộ:</strong> Từ yêu cầu công năng (Design Brief), AI đề xuất cơ cấu diện tích và dây chuyền công năng tối ưu.</li>
+                                <li>⚡ <strong>Tự động viết mã AutoLISP (.lsp / .scr):</strong> AI sinh mã lệnh nạp thẳng vào AutoCAD để tự động vẽ lưới trục, cột bê tông, tường bao và gắn dim kích thước.</li>
+                                <li>🎯 <strong>Thao tác trực tiếp trên AutoCAD:</strong> Giảng viên thị phạm kết nối AutoCAD qua MCP Server và phím tắt chuyên ngành.</li>
+                            </ul>
+                        </div>
+
+                        <div class="swiss-card highlight reveal">
+                            <div class="card-num">BÀI TẬP VỀ NHÀ</div>
+                            <div class="card-title">Chuẩn Bị Cho Buổi 03</div>
+                            <div class="card-text">
+                                Mỗi học viên chuẩn bị trước **01 bài toán mặt bằng công trình thực tế** của mình (kích thước khu đất, số tầng, hướng, yêu cầu công năng cơ bản) để thực hành điều khiển vẽ CAD ngay tại lớp!
+                            </div>
+                            <div class="badge-tag badge-red" style="margin-top: 16px; font-size: 16px;">HẸN GẶP LẠI TẠI BUỔI 03!</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================================
+                 DECK HUD (FLOATING CONTROLS)
+                 ==================================================================== -->
+            <div class="deck-hud">
+                <div class="hud-left">
+                    <div class="hud-counter" id="slideIndicator">01 / 22</div>
+                    <div class="hud-progress-track">
+                        <div class="hud-progress-bar" id="progressBar"></div>
+                    </div>
+                </div>
+
+                <div class="hud-buttons">
+                    <!-- Font Scaler Toolset (Rule 11 Compliance) -->
+                    <div class="font-scaler-group">
+                        <button class="scaler-btn" id="btnFontDec" title="Thu nhỏ chữ (A-)">A-</button>
+                        <button class="scaler-btn" id="btnFontReset" title="Đặt lại cỡ chữ">100%</button>
+                        <button class="scaler-btn" id="btnFontInc" title="Phóng to chữ (A+)">A+</button>
+                    </div>
+
+                    <button class="hud-btn" id="btnPrev" title="Phím mũi tên trái (←)">◀ Trước</button>
+                    <button class="hud-btn hud-btn-primary" id="btnNext" title="Phím mũi tên phải (→) hoặc Space">Sau ▶</button>
+                    <button class="hud-btn" id="btnOverview" title="Phím tắt: O">📋 Danh sách (O)</button>
+                    <button class="hud-btn" id="btnNotes" title="Phím tắt: N">📝 Ghi chú (N)</button>
+                    <button class="hud-btn" id="btnFullscreen" title="Phím tắt: F">⛶ Toàn màn hình</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         OVERVIEW MODAL (Press 'O')
+         ========================================================================== -->
+    <div class="modal-overlay" id="overviewModal">
+        <div class="modal-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 14px;">
+                <h3 style="font-family: var(--font-display); font-size: 24px; font-weight: 800; color: var(--swiss-black);">
+                    DANH SÁCH 22 SLIDE — BUỔI 02
+                </h3>
+                <button class="hud-btn" id="btnCloseOverview">✕ Đóng (Esc)</button>
+            </div>
+            <div class="overview-grid" id="overviewGrid"></div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         SPEAKER NOTES DRAWER (Press 'N')
+         ========================================================================== -->
+    <div class="speaker-drawer" id="speakerDrawer">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div class="badge-tag badge-red">LỜI DẪN GIẢNG VIÊN (SPEAKER NOTES)</div>
+            <button class="hud-btn" id="btnCloseNotes" style="padding: 2px 10px; font-size: 13px;">✕ Đóng</button>
+        </div>
+        <div id="speakerContent" style="font-size: 18px; color: #1e293b; line-height: 1.55;"></div>
+    </div>
+
+    <!-- ==========================================================================
+         JAVASCRIPT ENGINE (SCALING, NAVIGATION, TIMER, NOTES, FONT SCALER)
+         ========================================================================== -->
+    <script>
+        (function() {
+            const stage = document.getElementById('deckStage');
+            const slides = document.querySelectorAll('.slide');
+            const totalSlides = slides.length;
+            let currentSlideIndex = 0;
+
+            const slideIndicator = document.getElementById('slideIndicator');
+            const progressBar = document.getElementById('progressBar');
+            const btnPrev = document.getElementById('btnPrev');
+            const btnNext = document.getElementById('btnNext');
+            const btnFullscreen = document.getElementById('btnFullscreen');
+            const btnOverview = document.getElementById('btnOverview');
+            const btnNotes = document.getElementById('btnNotes');
+            const overviewModal = document.getElementById('overviewModal');
+            const btnCloseOverview = document.getElementById('btnCloseOverview');
+            const overviewGrid = document.getElementById('overviewGrid');
+            const speakerDrawer = document.getElementById('speakerDrawer');
+            const btnCloseNotes = document.getElementById('btnCloseNotes');
+            const speakerContent = document.getElementById('speakerContent');
+
+            // Font Scaler Elements
+            const btnFontDec = document.getElementById('btnFontDec');
+            const btnFontReset = document.getElementById('btnFontReset');
+            const btnFontInc = document.getElementById('btnFontInc');
+            let currentFontScale = 1.0;
+
+            // Speaker Notes Map
+            const speakerNotesMap = {
+                1: "Lời dẫn GV mở màn: 'Chào cả lớp. Buổi trước mình đã tạo AI Workspace. Hôm nay chúng ta biến tài liệu kỹ thuật thành vũ khí tự động hóa bằng cách đóng gói SKILL.'",
+                2: "Nhấn mạnh nỗi đau: '150 trang spec đọc bằng mắt mất 3 ngày vẫn sót lỗi. AI giúp chúng ta rà soát trong 30 giây.'",
+                3: "Giải thích bình dân: 'Skill giống như tờ SOP dán trên tường, nhưng đóng gói cho AI đọc và thực thi chuẩn xác.'",
+                4: "Chỉ rõ: 'File SKILL.md chỉ cần để đúng thư mục .claude/skills/ là chạy được, không cần cài cắm gì.'",
+                5: "Điểm mấu chốt: 'Dòng description quyết định Claude có tự nạp skill hay không. Viết mờ là AI bỏ qua.'",
+                6: "Nhấn mạnh tính mạng & pháp lý: 'Xây dựng không chấp nhận AI bịa số. Thiếu thì bắt buộc ghi không đề cập.'",
+                7: "Demo Lượt 1: 'Hỏi thông thường xuôi tai nhưng thiếu số liệu. Đừng dừng lại ở đây!'",
+                8: "Demo Lượt 2: 'Ép AI bóc tách chi tiết: độ dày thép, tỷ trọng bông Rockwool, tấm MgO.'",
+                9: "Demo Lượt 3: 'Chuẩn hóa thành Ma trận nghiệm thu 6 cột bàn giao cho hiện trường.'",
+                10: "Khoảnh khắc cú nổ: 'Trang 42 đòi EI 90 mà bản vẽ ghi EI 60. Nếu thi công sai sẽ bị đình chỉ nghiệm thu!'",
+                11: "Demo Lượt 5: 'Thử bẫy phạt tiền ➔ AI không bịa. Sau đó xuất ngay phiếu RFI số 01.'",
+                12: "Đóng gói: 'Mất 5 lượt hỏi đáp, giờ gói lại thành skill soat-ho-so-ky-thuat dùng lại mãi mãi.'",
+                13: "Kiểm chứng: 'Đưa file Bê tông vách hầm vào, chỉ gõ 1 câu duy nhất là skill tự nạp ra kết quả!'",
+                14: "Giới thiệu North Star: 'Mở repo vn-autocad-skill trên GitHub cho lớp thấy hệ sinh thái 8 skill của GV.'",
+                15: "Giải thích 11 bước lập hồ sơ thiết kế thi công nhà ở chuẩn TCVN.",
+                16: "Phân tích vai trò của từng skill trong repo: kiến trúc, kết cấu, cơ điện, soát lỗi, dự toán.",
+                17: "Hướng dẫn cài đặt plugin qua Claude Code và chạy 3 lệnh tắt.",
+                18: "Nhắc nhở ranh giới: 'AI không tính nội lực, không ký thay kỹ sư có chứng chỉ.'",
+                19: "Bắt đầu 35 phút làm bài Lab 02. Bấm nút đồng hồ đếm ngược.",
+                20: "Chiếu Rubric chấm điểm cho học viên kiểm tra chéo nhau.",
+                21: "Chốt lại 3 từ khóa: Skill = SOP, Chống bịa = Có số trang, Auto-load = Description chuẩn.",
+                22: "Giao bài tập về nhà chuẩn bị mặt bằng để thực hành vẽ AutoCAD ở Buổi 03."
+            };
+
+            // 1. Stage Fitting Engine (1920x1080 fixed)
+            function fitStage() {
+                const targetW = 1920;
+                const targetH = 1080;
+                const windowW = window.innerWidth;
+                const windowH = window.innerHeight;
+
+                const scale = Math.min(windowW / targetW, windowH / targetH);
+                const left = (windowW - targetW * scale) / 2;
+                const top = (windowH - targetH * scale) / 2;
+
+                stage.style.transform = `translate(${left}px, ${top}px) scale(${scale})`;
+            }
+
+            window.addEventListener('resize', fitStage);
+
+            // 2. Slide Navigation Logic
+            function showSlide(index) {
+                if (index < 0 || index >= totalSlides) return;
+
+                slides.forEach((s, idx) => {
+                    if (idx === index) {
+                        s.classList.add('active');
+                    } else {
+                        s.classList.remove('active');
+                    }
+                });
+
+                currentSlideIndex = index;
+
+                // Update HUD
+                const displayNum = currentSlideIndex + 1;
+                slideIndicator.textContent = (displayNum < 10 ? '0' + displayNum : displayNum) + ' / ' + totalSlides;
+
+                // Update Progress Bar
+                const pct = ((currentSlideIndex + 1) / totalSlides) * 100;
+                progressBar.style.width = pct + '%';
+
+                // Update Speaker Content
+                speakerContent.textContent = speakerNotesMap[displayNum] || "Chưa có ghi chú riêng cho slide này.";
+
+                // Update Modal active highlight
+                document.querySelectorAll('.overview-item').forEach((item, idx) => {
+                    if (idx === currentSlideIndex) item.classList.add('active');
+                    else item.classList.remove('active');
+                });
+
+                // URL hash update
+                window.location.hash = `#${currentSlideIndex + 1}`;
+            }
+
+            function nextSlide() {
+                if (currentSlideIndex < totalSlides - 1) showSlide(currentSlideIndex + 1);
+            }
+
+            function prevSlide() {
+                if (currentSlideIndex > 0) showSlide(currentSlideIndex - 1);
+            }
+
+            function toggleFullscreen() {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(err => {
+                        console.log(`Fullscreen error: ${err.message}`);
+                    });
+                } else {
+                    document.exitFullscreen();
+                }
+            }
+
+            // 3. Font Scaler Engine (Rule 11)
+            function updateFontScale(newScale) {
+                currentFontScale = Math.min(Math.max(newScale, 0.85), 1.35);
+                document.documentElement.style.setProperty('--font-scale', currentFontScale);
+                btnFontReset.textContent = Math.round(currentFontScale * 100) + '%';
+            }
+
+            btnFontInc.addEventListener('click', () => updateFontScale(currentFontScale + 0.05));
+            btnFontDec.addEventListener('click', () => updateFontScale(currentFontScale - 0.05));
+            btnFontReset.addEventListener('click', () => updateFontScale(1.0));
+
+            // 4. Modal & Drawer Controls
+            function toggleOverview() {
+                overviewModal.classList.toggle('active');
+            }
+
+            function toggleNotes() {
+                speakerDrawer.classList.toggle('active');
+            }
+
+            btnOverview.addEventListener('click', toggleOverview);
+            btnCloseOverview.addEventListener('click', toggleOverview);
+            btnNotes.addEventListener('click', toggleNotes);
+            btnCloseNotes.addEventListener('click', toggleNotes);
+
+            // Populate Overview Grid
+            slides.forEach((s, idx) => {
+                const item = document.createElement('div');
+                item.className = 'overview-item' + (idx === 0 ? ' active' : '');
+                const num = (idx + 1) < 10 ? '0' + (idx + 1) : (idx + 1);
+                const title = s.getAttribute('data-title') || ('Slide ' + num);
+                item.innerHTML = `<div class="num">SLIDE ${num}</div><div class="title">${title}</div>`;
+                item.addEventListener('click', () => {
+                    showSlide(idx);
+                    toggleOverview();
+                });
+                overviewGrid.appendChild(item);
+            });
+
+            // 5. Practice Countdown Timer (Slide 19)
+            let timerSeconds = 35 * 60;
+            let timerInterval = null;
+            const timerEl = document.getElementById('labTimer');
+            const btnStart = document.getElementById('btnStartTimer');
+            const btnReset = document.getElementById('btnResetTimer');
+
+            function updateTimerDisplay() {
+                const m = Math.floor(timerSeconds / 60);
+                const s = timerSeconds % 60;
+                timerEl.textContent = (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
+            }
+
+            btnStart.addEventListener('click', () => {
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                    btnStart.textContent = 'Tiếp tục';
+                } else {
+                    btnStart.textContent = 'Tạm dừng';
+                    timerInterval = setInterval(() => {
+                        if (timerSeconds > 0) {
+                            timerSeconds--;
+                            updateTimerDisplay();
+                        } else {
+                            clearInterval(timerInterval);
+                            timerInterval = null;
+                            alert('Hết giờ làm bài thực hành Lab 02!');
+                        }
+                    }, 1000);
+                }
+            });
+
+            btnReset.addEventListener('click', () => {
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                }
+                timerSeconds = 35 * 60;
+                btnStart.textContent = 'Bắt đầu';
+                updateTimerDisplay();
+            });
+
+            // 6. Keyboard Listeners
+            window.addEventListener('keydown', (e) => {
+                if (overviewModal.classList.contains('active')) {
+                    if (e.key === 'Escape') toggleOverview();
+                    return;
+                }
+
+                switch(e.key) {
+                    case 'ArrowRight':
+                    case 'ArrowDown':
+                    case 'PageDown':
+                    case ' ':
+                        e.preventDefault();
+                        nextSlide();
+                        break;
+                    case 'ArrowLeft':
+                    case 'ArrowUp':
+                    case 'PageUp':
+                        e.preventDefault();
+                        prevSlide();
+                        break;
+                    case 'Home':
+                        e.preventDefault();
+                        showSlide(0);
+                        break;
+                    case 'End':
+                        e.preventDefault();
+                        showSlide(totalSlides - 1);
+                        break;
+                    case 'f':
+                    case 'F':
+                        toggleFullscreen();
+                        break;
+                    case 'o':
+                    case 'O':
+                        toggleOverview();
+                        break;
+                    case 'n':
+                    case 'N':
+                        toggleNotes();
+                        break;
+                }
+            });
+
+            btnNext.addEventListener('click', nextSlide);
+            btnPrev.addEventListener('click', prevSlide);
+            btnFullscreen.addEventListener('click', toggleFullscreen);
+
+            // Hash Deep-link check on load
+            if (window.location.hash) {
+                const hashNum = parseInt(window.location.hash.replace('#', ''), 10);
+                if (!isNaN(hashNum) && hashNum >= 1 && hashNum <= totalSlides) {
+                    currentSlideIndex = hashNum - 1;
+                }
+            }
+
+            // Init
+            fitStage();
+            showSlide(currentSlideIndex);
+        })();
+    </script>
+</body>
+</html>

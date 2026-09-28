@@ -1,119 +1,137 @@
 # THƯ VIỆN PROMPT THỰC CHIẾN — BUỔI 02
-## BỘ CÂU LỆNH CẤU HÌNH AGENT 02: HỒ SƠ KỸ THUẬT & TRÍCH XUẤT CHUYÊN SÂU
-**Áp dụng cho:** ChatGPT Projects, Claude Projects, NotebookLM  
-**Đơn vị phát triển:** CES Global ([https://aec.cesglobal.com.vn/](https://aec.cesglobal.com.vn/))
+## BỘ CÂU LỆNH RÀ SOÁT HỒ SƠ KỸ THUẬT, ĐÓNG GÓI SKILL & KHAI THÁC VN-AUTOCAD-SKILL
+**Áp dụng cho:** Claude Code, ChatGPT Projects, Google Gemini  
+**Hồ sơ thực hành:** Bộ file PDF tại thư mục `demo/`  
+**Đơn vị phát triển:** CES Global AEC ([https://aec.cesglobal.com.vn/](https://aec.cesglobal.com.vn/))
 
 ---
 
-## 1. SYSTEM PROMPT CẤU HÌNH AGENT 02 (DOCUMENT & SPEC AUDITOR)
+## 1. BỘ 5 CÂU LỆNH DEMO THỊ PHẠM (DÙNG CHO GIẢNG VIÊN & HỌC VIÊN)
 
-*Hướng dẫn sử dụng:* Cấu hình prompt này làm System Prompt cho Agent 02 hoặc tạo một Trợ lý chuyên sâu về Hồ sơ kỹ thuật.
-
+### Lượt 1: Tóm Tắt Khảo Sát Thô (Thấy ngay điểm hạn chế của cách hỏi thường)
 ```markdown
-# VAI TRÒ VÀ NĂNG LỰC NGHIỆP VỤ
-Bạn là "AGENT 02 — CHUYÊN GIA RÀ SOÁT HỒ SƠ KỸ THUẬT & TIÊU CHUẨN XÂY DỰNG" (Document & Spec Auditor AI). Bạn chịu trách nhiệm hỗ trợ Kỹ sư kỹ thuật, Kỹ sư đấu thầu và Giám đốc dự án đọc hiểu, phân tích, đối chiếu và phát hiện các mâu thuẫn, thiếu sót trong toàn bộ hệ thống hồ sơ dự án (Hồ sơ mời thầu, Chỉ dẫn kỹ thuật, Thuyết minh thiết kế, Tiêu chuẩn Việt Nam TCVN/QCVN và Quốc tế).
-
-# KHO TRI THỨC VÀ NGUỒN DỮ LIỆU ĐƯỢC PHÉP TRUY CẬP
-1. Toàn bộ các tệp tài liệu PDF, Word, Excel được nạp vào phần Knowledge/Tệp đính kèm.
-2. Tệp bối cảnh chung: "00_Project_Context_Profile.md".
-
-# RÀNG BUỘC KỸ THUẬT BẮT BUỘC (CRITICAL CONSTRAINTS)
-1. NGUYÊN TẮC DẪN NGUỒN CHÍNH XÁC (CITATION MANDATE):
-   - Mọi thông tin, yêu cầu kỹ thuật, mác vật liệu, kích thước bạn đưa ra BẮT BUỘC phải kèm theo nguồn trích dẫn cụ thể: Tên tài liệu, Chương/Mục số, và Số trang tài liệu gốc (Ví dụ: [Chỉ dẫn kỹ thuật PCCC, Mục 4.2, Trang 38]).
-   - Tuyệt đối không trả lời chung chung theo kiểu "theo quy định thông thường" nếu tài liệu dự án có quy định riêng.
-2. NGUYÊN TẮC RÀ SOÁT MÂU THUẪN (CONFLICT DETECTION):
-   - Khi nhận thấy có sự sai khác giữa Thuyết minh kỹ thuật và Bản vẽ thiết kế, hoặc giữa Chỉ dẫn kỹ thuật và Tiêu chuẩn hiện hành, BẮT BUỘC phải lập bảng đối chiếu chỉ rõ điểm khác biệt và cảnh báo rủi ro pháp lý/chi phí.
-   - Không được tự ý đưa ra kết luận chọn phương án nào; phải đề xuất phát hành Phiếu RFI để Tư vấn thiết kế và Chủ đầu tư trả lời bằng văn bản.
-3. VĂN PHONG VÀ THỂ THỨC:
-   - Sử dụng thuật ngữ kỹ thuật xây dựng chính xác (Ví dụ: "chiều dày lớp bê tông bảo vệ", "độ sụt", "cường độ chịu nén", "giới hạn chịu lửa EI", "độ dốc thoát nước").
-   - Thể thức văn bản hành chính tuân thủ tinh thần Nghị định 30/2020/NĐ-CP.
-
-# CẤU TRÚC PHẢN HỒI MẪU CHO MỌI CÂU HỎI TRÍCH XUẤT:
-- [THÔNG TIN YÊU CẦU]: Nội dung kỹ thuật tóm tắt.
-- [NGUỒN TRÍCH DẪN GỐC]: Tên tệp, Mục, Số trang.
-- [TIÊU CHUẨN ĐỐI CHIẾU]: TCVN/QCVN hoặc ASTM/Eurocode liên quan.
-- [LƯU Ý HIỆN TRƯỜNG / RỦI RO]: Điểm cần chú ý khi thi công hoặc nghiệm thu.
+Tóm tắt giúp tôi các yêu cầu kỹ thuật đối với hệ thống cửa chống cháy trong tệp tài liệu:
+demo/01_Chi_Dan_Ky_Thuat_PCCC_GreenTech_Tower.pdf
 ```
 
 ---
 
-## 2. THƯ VIỆN TASK PROMPT THỰC CHIẾN
-
-### Prompt 2.1: Trích Xuất Toàn Diện Phạm Vi Công Việc (Scope of Work Extractor)
-Dùng khi nhận tập hồ sơ mời thầu (HSMT) dày cộp và cần bóc tách nhanh phạm vi công việc gói thầu.
-
+### Lượt 2: Bóc Tách Chi Tiết Quy Cách Cấu Tạo Vật Liệu
 ```markdown
-[VAI TRÒ]: Agent 02 — Chuyên gia rà soát hồ sơ kỹ thuật.
-[BỐI CẢNH]: Dự án đang trong giai đoạn chuẩn bị đấu thầu gói thầu xây dựng và hoàn thiện.
-[DỮ LIỆU ĐẦU VÀO]: {Đính kèm tệp Chỉ dẫn kỹ thuật hoặc Hồ sơ mời thầu}.
-[NHIỆM VỤ]:
-1. Đọc và trích xuất toàn bộ Phạm vi công việc (Scope of Work - SOW) thuộc trách nhiệm của Nhà thầu chính.
-2. Liệt kê rõ ràng: Các công việc thuộc phạm vi hợp đồng (Included) và Các công việc do Chủ đầu tư chỉ định thầu phụ khác thực hiện (Excluded / By Others).
-3. Bóc tách các mốc tiến độ trung gian ràng buộc (Milestones) và mức phạt chậm tiến độ nếu có quy định.
-[RÀNG BUỘC KỸ THUẬT]:
-- Ghi rõ số trang và điều khoản tham chiếu cho từng hạng mục công việc.
-- Nếu điều khoản nào viết mập mờ, dễ gây tranh cãi về chi phí sau này, hãy đưa vào mục "[CẢNH BÁO RỦI RO TRANH CHẤP]".
-[ĐỊNH DẠNG]: Xuất ra dạng bảng phân loại rõ ràng.
+Chưa đủ chi tiết. Hãy đọc kỹ Mục 5 (Điều 5.3) và bóc tách cụ thể:
+1. Độ dày thép khung và thép cánh.
+2. Quy cách lõi cách nhiệt (loại vật liệu, tỷ trọng kg/m³, tấm chống cháy bổ sung).
+3. Các phụ kiện kim khí bắt buộc (bản lề, tay co thủy lực, thanh thoát hiểm).
+4. Tiêu chuẩn thử nghiệm chịu lửa viện dẫn áp dụng.
 ```
 
 ---
 
-### Prompt 2.2: Lập Ma Trận Yêu Cầu Kỹ Thuật & Nghiệm Thu (Requirements Matrix)
-Dùng để bàn giao cho Kỹ sư hiện trường và Kỹ sư QA/QC chuẩn bị hồ sơ quản lý chất lượng.
-
+### Lượt 3: Lập Ma Trận Yêu Cầu Kỹ Thuật & Nghiệm Thu Đầu Vào 6 Cột
 ```markdown
-[VAI TRÒ]: Agent 02 — Hồ sơ kỹ thuật.
-[BỐI CẢNH]: Dự án chuẩn bị triển khai thi công phần ngầm / hoàn thiện công trình.
-[DỮ LIỆU ĐẦU VÀO]: {Đính kèm tài liệu Chỉ dẫn kỹ thuật phần kết cấu/hoàn thiện}.
-[NHIỆM VỤ]:
-Hãy lập "Ma trận Yêu cầu Kỹ thuật và Nghiệm thu Vật tư Đầu vào" cho các hạng mục chính trong tài liệu.
-[CẤU TRÚC BẢNG YÊU CẦU]:
-Lập bảng gồm 6 cột:
+Hãy lập "Ma trận Yêu cầu Kỹ thuật và Nghiệm thu Vật tư" cho hệ cửa chống cháy thành bảng gồm 6 cột:
 1. STT
-2. Hạng mục công tác / Cấu kiện
-3. Quy cách kỹ thuật yêu cầu (Mác, kích thước, xuất xứ, tính năng)
-4. Tiêu chuẩn Việt Nam (TCVN/QCVN) viện dẫn áp dụng
-5. Hồ sơ / Chứng chỉ thí nghiệm bắt buộc phải có trước khi nghiệm thu
-6. Vị trí trích dẫn trong tài liệu dự án (Tên file, Mục, Trang)
-[RÀNG BUỘC]:
-- Không tóm tắt qua loa, phải bóc tách đầy đủ các chỉ số kỹ thuật cụ thể (độ sụt, độ chống thấm, giới hạn chịu lửa, dung sai cho phép).
+2. Hạng mục / Cấu phần
+3. Quy cách kỹ thuật yêu cầu
+4. Tiêu chuẩn viện dẫn (TCVN / QCVN)
+5. Hồ sơ / Chứng chỉ thí nghiệm nghiệm thu bắt buộc phải có
+6. Vị trí trích dẫn số trang trong tài liệu gốc (Tên file, Mục, Số trang)
+[RÀNG BUỘC]: Bóc tách chính xác các chỉ số kỹ thuật, không tóm tắt chung chung.
 ```
 
 ---
 
-### Prompt 2.3: Rà Soát Mâu Thuẫn Đa Tài Liệu (Cross-Document Conflict Detector)
-Dùng khi có sự nghi ngờ sai khác giữa Thuyết minh kiến trúc, Thuyết minh kết cấu, Chỉ dẫn PCCC và Bản vẽ.
-
+### Lượt 4: Rà Soát Mâu Thuẫn Đa Tài Liệu (Bắt lỗi vênh EI 90 vs EI 60)
 ```markdown
-[VAI TRÒ]: Agent 02 — Hồ sơ kỹ thuật.
-[BỐI CẢNH]: Kỹ sư kỹ thuật đang nghi ngờ có sự không đồng nhất giữa Thuyết minh PCCC và Bản vẽ mặt bằng hoàn thiện.
-[DỮ LIỆU ĐẦU VÀO]: {Đính kèm File A: Thuyết minh kỹ thuật và File B: Bản vẽ/Ghi chú bản vẽ}.
-[NHIỆM VỤ]:
-1. Thực hiện rà soát chéo giữa File A và File B đối với các hạng mục sau: (a) Cửa chống cháy và vách kính chống cháy, (b) Chiều rộng lối thoát nạn, (c) Cấp chịu lửa của kết cấu dầm sàn.
-2. Lập Bảng đối chiếu mâu thuẫn (Conflict Log) chỉ rõ:
-   - Hạng mục sai khác.
-   - Quy định tại File A (kèm trang, mục).
-   - Quy định tại File B (kèm ký hiệu, số bản vẽ).
-   - Đánh giá mức độ rủi ro (Nghiêm trọng / Trung bình / Thấp).
-3. Đề xuất câu hỏi để kỹ sư đưa vào Phiếu yêu cầu làm rõ (RFI).
+Tôi nạp thêm tệp: demo/02_Thuyet_Minh_Ban_Ve_KT102.pdf.
+Hãy thực hiện đối chiếu chéo giữa file 01 (Chỉ dẫn PCCC) và file 02 (Bản vẽ KT-102) đối với cửa thoát nạn buồng thang ký hiệu D-08:
+1. Chỉ ra điểm mâu thuẫn về Giới hạn chịu lửa (EI), tỷ trọng bông cách nhiệt và cấu tạo lõi.
+2. Đánh giá mức độ rủi ro: Nếu Nhà thầu thi công theo bản vẽ KT-102 (EI 60) thì công trình có nguy cơ bị đình chỉ nghiệm thu PCCC khi bàn giao không?
+3. Đánh giá chênh lệch chi phí giữa hai phương án.
 ```
 
 ---
 
-### Prompt 2.4: Soạn Thảo Phiếu Yêu Cầu Làm Rõ Thông Tin (RFI Generator)
-Dùng để xuất văn bản hành chính gửi Chủ đầu tư và Tư vấn thiết kế.
+### Lượt 5: Kiểm Tra Quy Tắc Chống Bịa (Anti-Hallucination) & Sinh Phiếu RFI
+```markdown
+Câu hỏi kiểm tra: Trong hai tài liệu trên, mức phạt tiền nếu nhà thầu giao chậm cửa chống cháy là bao nhiêu?
+[QUY TẮC]: Chỉ dùng thông tin có trong tài liệu. Nếu tài liệu không nói, BẮT BUỘC ghi "Tài liệu không đề cập", tuyệt đối KHÔNG suy đoán.
+Sau đó, hãy soạn thảo 01 "PHIẾU YÊU CẦU LÀM RÕ THÔNG TIN (RFI-ARC-001)" gửi Tư vấn thiết kế V-Design và Ban QLDA đề xuất thống nhất phương án xử lý cửa D-08 theo chuẩn EI 90 để đảm bảo nghiệm thu công trình.
+```
+
+---
+
+## 2. PROMPT ĐÓNG GÓI TOÀN BỘ QUY TRÌNH THÀNH SKILL TRONG CLAUDE CODE
+
+Sau khi hoàn thành chuỗi 5 câu lệnh, gõ prompt sau vào Claude Code để tự động sinh file Skill:
 
 ```markdown
-[VAI TRÒ]: Kỹ sư Kỹ thuật hiện trường phụ trách pháp lý hồ sơ.
-[BỐI CẢNH]: Dự án GreenTech Tower xuất hiện mâu thuẫn về thông số kỹ thuật cửa chống cháy tại buồng thang thoát hiểm giữa Thuyết minh PCCC (EI 90) và Bản vẽ mặt bằng KT-102 (ghi chú EI 60).
-[NHIỆM VỤ]:
-Hãy soạn thảo một "PHIẾU YÊU CẦU LÀM RÕ THÔNG TIN (REQUEST FOR INFORMATION - RFI)" chuẩn mực, chuyên nghiệp để trình Kỹ sư trưởng ký gửi Ban QLDA và Tư vấn thiết kế.
-[YÊU CẦU NỘI DUNG]:
-- Số hiệu phiếu: RFI-ARC-001.
-- Tiêu đề: Về việc làm rõ tiêu chuẩn giới hạn chịu lửa của hệ thống cửa chống cháy buồng thang bộ trục 2-3.
-- Phần 1: Bối cảnh & Mô tả chi tiết điểm mâu thuẫn (trích dẫn số bản vẽ và trang thuyết minh).
-- Phần 2: Đánh giá tác động (nguy cơ không đủ điều kiện nghiệm thu PCCC theo QCVN 06:2022/BXD và ảnh hưởng chi phí/tiến độ gia công cửa).
-- Phần 3: Đề xuất phương án xử lý của Nhà thầu (Phương án A: Thống nhất theo EI 90 để đảm bảo tuyệt đối an toàn PCCC; Phương án B: Giữ EI 60 nếu hồ sơ thiết kế cơ sở được duyệt có giải pháp bù đắp).
-- Phần 4: Đề nghị thời hạn phúc đáp (trong vòng 03 ngày làm việc).
-[THỂ THỨC]: Trình bày trang trọng, chuẩn thể thức văn bản hành chính doanh nghiệp xây dựng.
+Tôi thấy kết quả rà soát vừa rồi rất chuẩn xác. Bây giờ hãy đóng gói toàn bộ quy trình này thành một Skill cho tôi, để sau này khi tôi đưa bất kỳ hồ sơ kỹ thuật nào vào, bạn đều tự động chạy ra kết quả chuẩn mà tôi không cần phải chat nhiều lượt nữa.
+
+Hãy tạo file tại: .claude/skills/soat-ho-so-ky-thuat/SKILL.md
+Nội dung gồm:
+1. YAML Frontmatter:
+   name: soat-ho-so-ky-thuat
+   description: Dùng khi cần rà soát chỉ dẫn kỹ thuật, đối chiếu mâu thuẫn giữa bản vẽ và thuyết minh, lập ma trận nghiệm thu vật tư và sinh phiếu RFI.
+
+2. Cấu trúc xuất kết quả chuẩn 5 phần:
+   - PHẦN 1: TÓM TẮT QUY CÁCH VẬT TƯ & THÔNG SỐ CỐT LÕI
+   - PHẦN 2: MA TRẬN YÊU CẦU NGHIỆM THU (bảng 6 cột kèm TCVN và chứng chỉ)
+   - PHẦN 3: BẢNG ĐỐI CHIẾU MÂU THUẪN (nêu rõ tài liệu, số trang, điểm sai lệch)
+   - PHẦN 4: DỰ THẢO PHIẾU RFI LÀM RÕ (chuẩn thể thức hành chính kỹ thuật)
+   - PHẦN 5: QUY TẮC CHỐNG BỊA (thông tin không có ghi 'tài liệu không đề cập', trích dẫn số trang đầy đủ).
+```
+
+---
+
+## 3. PROMPT KIỂM CHỨNG TÁI SỬ DỤNG SKILL (CÁC TEST CASE MỞ RỘNG)
+
+### Test Case 1: Đối chiếu Bê tông Vách hầm (Demo 03 & Demo 04)
+```markdown
+Rà soát và đối chiếu mâu thuẫn kỹ thuật giữa:
+1. demo/03_Chi_Dan_Thi_Cong_Be_Tong_Vach_Ham.pdf
+2. demo/04_Thuyet_Minh_Ban_Ve_Vach_Ham_KC02.pdf
+
+Yêu cầu xuất ra:
+- Ma trận so sánh mác bê tông B35 vs B30, chống thấm W10 vs W8, lớp bảo vệ cốt thép 40mm vs 25mm.
+- Đánh giá rủi ro thấm nứt công trình ngầm và phát sinh chi phí vật tư dự toán.
+- Soạn thảo Phiếu RFI số RFI-STR-002 gửi Tư vấn Thiết kế Kết cấu.
+```
+
+### Test Case 2 (Đề bài nâng cao): Đối chiếu Sơn chống cháy kết cấu thép (Demo 05 & Demo 06)
+```markdown
+Rà soát và đối chiếu mâu thuẫn kỹ thuật giữa:
+1. demo/05_Chi_Dan_Ky_Thuat_Son_Chong_Chay_Ket_Cau_Thep.pdf
+2. demo/06_Thuyet_Minh_Ban_Ve_Ket_Cau_Thep_KC105.pdf
+
+Yêu cầu xuất ra:
+- Đối chiếu giới hạn chịu lửa R120 (Chỉ dẫn kỹ thuật) vs R60 (Bản vẽ KC-105).
+- Cảnh báo rủi ro cơ quan Cảnh sát PCCC từ chối nghiệm thu công trình.
+- Tính toán chênh lệch ngân sách phát sinh cho diện tích 1.450 m² thép sảnh.
+- Xuất dự thảo Phiếu RFI số RFI-PCCC-003 gửi Chủ đầu tư và Tư vấn Giám sát.
+```
+
+---
+
+## 4. BỘ LỆNH CÀI ĐẶT & KHÁM PHÁ REPO VN-AUTOCAD-SKILL (NORTH STAR)
+
+### Cài đặt Plugin qua Claude Code:
+```bash
+/plugin marketplace add andyluu98/vn-autocad-skill
+/plugin install vn-autocad-skill@vn-autocad
+```
+
+### Kích hoạt lệnh dựng hồ sơ mới:
+```
+/ho-so-moi nhà phố 4x16m, 3 tầng, 3 phòng ngủ, có gara ô tô
+```
+
+### Kích hoạt lệnh soát lỗi 3 tầng tự động:
+```
+/soat-ban-ve
+```
+
+### Kích hoạt xuất DWG qua AutoCAD:
+```
+/xuat-dwg
 ```
