@@ -79,16 +79,18 @@ Mỗi buổi học kéo dài 150 phút (2 giờ 30 phút), áp dụng triệt đ
 
 ---
 
-### Buổi 04: AI CHO BOQ, DỰ TOÁN VÀ KIỂM SOÁT CHI PHÍ ĐẦU TƯ
-- **Mục tiêu:** Tự động hóa công tác lập danh mục bóc tách, chuẩn hóa bảng tiên lượng khối lượng (BOQ) và kiểm soát sai lệch ngân sách thi công.
-- **Nội dung lý thuyết (30'):**
-  - Kỹ thuật bóc tách khối lượng từ thuyết minh kỹ thuật và bảng thống kê bản vẽ; ranh giới an toàn: AI không tự "đoán" khối lượng khi thiếu kích thước chi tiết.
-  - Phương pháp chuẩn hóa mã hiệu công tác, phân loại hạng mục theo định mức và tiêu chuẩn đo bóc hiện hành.
-  - Kỹ thuật đối soát báo giá thầu phụ/nhà cung cấp: Bóc tách đơn giá, điều kiện thương mại, thời gian giao hàng và phát hiện các chi phí ẩn.
-- **Nội dung thực hành (55'):**
-  - **Lab 04:** Triển khai **Agent 04 - Kỹ sư QS & Chi phí (Cost & QS Specialist)** để rà soát bản vẽ kết cấu/hoàn thiện, lập bảng tính BOQ chuẩn hóa trên Excel và phân tích chênh lệch giữa 3 báo giá nhà thầu phụ.
+### Buổi 04: AGENT VÀ SUBAGENT, CLAUDE.MD AN TOÀN CHO KỸ SƯ, TỪ BẢN VẼ AUTOCAD ĐẾN MÔ HÌNH 3D BLENDER
+- **Mục tiêu:** Phân biệt và sử dụng Agent, Subagent; thiết lập CLAUDE.md Global với các nguyên tắc an toàn dữ liệu cho kỹ sư; cài MCP Blender; đi trọn đường ống bản vẽ AutoCAD (vẽ bằng MCP) sang mô hình 3D Blender có nội thất, tách tầng, đúng kích thước theo bản vẽ.
+- **Nội dung lý thuyết (55'):**
+  - Agent và Subagent: ngữ cảnh riêng, giới hạn công cụ, chạy song song; vị trí file `.claude/agents/` và `~/.claude/agents/`.
+  - CLAUDE.md 3 tầng (Global, dự án, thư mục con); 6 nguyên tắc an toàn: cấm xóa, tự sao lưu `_backup/`, đánh số file, đọc trước sửa sau, chống bịa số liệu, hỏi trước khi gửi ra ngoài. Phân biệt nội quy (CLAUDE.md) và chặn cứng (hook).
+  - Kiến trúc MCP Blender (`vn-mcp-blender`): Claude, MCP server, addon trong Blender qua cổng 9877.
+  - Đường ống 4 chặng: vẽ AutoCAD qua MCP, xuất DXF, đọc bản vẽ thành file mô tả, dựng Blender. Bản vẽ "máy đọc được": layer đúng đối tượng, chiều cao nằm trong bảng.
+- **Nội dung thực hành (70'):**
+  - **Lab 04:** Tạo subagent soát 3 cặp hồ sơ song song; gài và thử CLAUDE.md an toàn; dựng nhà phố lô 7x20m (3 tầng, tum, nội thất) từ bản vẽ AutoCAD vào Blender, tách tầng, render; sửa một thông số trên bản vẽ rồi dựng lại, kiểm chéo số cửa với bảng thống kê.
 - **Sản phẩm nghiệm thu (Deliverable D4):**
-  - Bảng BOQ Excel chuẩn hóa công thức + Bảng phân tích so sánh chào giá đa nhà thầu + Bảng cảnh báo vượt ngân sách đầu tư.
+  - File subagent + CLAUDE.md đã gài nguyên tắc và kết quả thử + Ảnh phối cảnh và ảnh bung tầng + Cặp ảnh trước, sau khi sửa bản vẽ kèm kiểm chéo số cửa.
+- **Ghi chú:** Nội dung BOQ, dự toán và kiểm soát chi phí (bản cũ của Buổi 04) giữ nguyên tại thư mục `04_Buoi_04_Boc_Tach_Khoi_Luong_BOQ_Du_Toan`, chờ xếp vào buổi sau.
 
 ---
 
