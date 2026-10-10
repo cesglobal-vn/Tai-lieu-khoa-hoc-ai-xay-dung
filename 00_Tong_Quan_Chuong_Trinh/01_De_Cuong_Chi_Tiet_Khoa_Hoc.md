@@ -94,29 +94,31 @@ Mỗi buổi học kéo dài 150 phút (2 giờ 30 phút), áp dụng triệt đ
 
 ---
 
-### Buổi 05: TRỢ LÝ AI QUẢN LÝ DỰ ÁN, TIẾN ĐỘ, QA/QC & AN TOÀN LAO ĐỘNG
-- **Mục tiêu:** Thiết lập hệ thống giám sát hiện trường thông minh: Lập tiến độ thi công tuần, tự động hóa nhật ký công trường, kiểm soát lỗi thi công và quản trị rủi ro an toàn (HSE).
-- **Nội dung lý thuyết (30'):**
-  - Phương pháp phân rã công việc (WBS) và lập kế hoạch thi công cuốn chiếu (Lookahead Schedule).
-  - Tự động hóa tổng hợp dữ liệu từ ghi chú công trường thành Nhật ký thi công và Biên bản họp giao ban công trường chuyên nghiệp.
-  - Ứng dụng AI phân tích hình ảnh và biên bản hiện trường để rà soát lỗi thi công (Defect Tracking) và lập bảng danh mục rủi ro (Risk Register).
-- **Nội dung thực hành (55'):**
-  - **Lab 05:** Cấu hình **Agent 05 - Tiến độ & Báo cáo** và **Agent 06 - QA/QC & HSE** để tạo báo cáo tiến độ tuần, sinh nhật ký thi công từ dữ liệu thô và xuất Checklist kiểm tra an toàn giàn giáo/cốt thép.
+### Buổi 05: ĐỘI NGŨ AGENT CHO HỒ SƠ NHÀ PHỐ: AGENT CHUYÊN TRÁCH, RENDER AI ĐỔI PHONG CÁCH VÀ BÓC KHỐI LƯỢNG
+- **Mục tiêu:** Lập đội agent chuyên trách cho văn phòng thiết kế nhỏ, giao nhiều agent làm cùng một lượt; cài MCP ChatGPT tạo ảnh để đổi phong cách ảnh render Blender mà giữ đúng kiến trúc; bóc khối lượng phần thô từ chính file mô tả bản vẽ ra Excel BOQ.
+- **Nội dung lý thuyết (45'):**
+  - Agent chuyên trách (có file trong `.claude/agents/`, dùng lại) và subagent tạm (giao theo đầu việc); giới hạn quyền bằng trường `tools`.
+  - Phối hợp nhiều agent cùng một lượt: song song cho việc độc lập, nối chuỗi cho việc phải chờ, gộp một báo cáo. Agent team: thử nghiệm, chỉ có ở terminal.
+  - MCP ChatGPT tạo ảnh (`chatgpt-image-mcp`), chế độ `ref_mode="render"`; ảnh AI để trao đổi phong cách, không phải hồ sơ kỹ thuật; rủi ro tài khoản khi dùng đăng nhập ChatGPT web.
+  - Bóc khối lượng từ file mô tả bản vẽ: diễn giải, nguồn, tách khối lượng thiết kế, hao hụt, khối lượng mua; không tự điền đơn giá; các bẫy trừ cửa hai lần, chiều cao tường.
+- **Nội dung thực hành (70'):**
+  - **Lab 05:** Tạo 3 agent `boc-khoi-luong`, `kiem-tra-khoi-luong` (chỉ đọc), `render-phong-cach`; thử phá agent chỉ đọc; đội agent chạy song song render 2 phong cách và bóc khối lượng nhà phố lô 7x20m, agent kiểm tra soát lại.
 - **Sản phẩm nghiệm thu (Deliverable D5):**
-  - Báo cáo tuần dự án chuẩn format + Mẫu nhật ký thi công tự động + Checklist nghiệm thu hiện trường + Bảng Risk Register dự án.
+  - 3 file agent + Ảnh đổi phong cách kèm bảng so sánh với ảnh Blender + Excel BOQ phần thô (sheet BOQ, kiểm chéo cửa, giả thiết) + Báo cáo đội agent.
+- **Ghi chú:** Nội dung quản lý dự án, tiến độ, QA/QC, HSE (bản cũ của Buổi 05) và hệ thống 6 agent doanh nghiệp (bản cũ của Buổi 06) chuyển vào `_backup\` ở gốc tài liệu ngày 10/10/2026, chờ xếp vào khóa nâng cao.
 
 ---
 
-### Buổi 06: XÂY DỰNG ĐỘI NGŨ AI AGENT CHO DOANH NGHIỆP XÂY DỰNG
-- **Mục tiêu:** Kết nối toàn bộ 6 Agent thành một quy trình tự động hóa khép kín (Multi-Agent Ecosystem) và thực hiện Đồ án tốt nghiệp khóa học.
-- **Nội dung lý thuyết (30'):**
-  - Thiết kế luồng phối hợp đa tác nhân (Multi-Agent Orchestration): Luồng chuyển giao dữ liệu (Handoff Protocol) từ Hồ sơ thầu ➔ Thiết kế ➔ QS ➔ Hiện trường ➔ Quản lý.
-  - Chiến lược bảo mật dữ liệu doanh nghiệp, phân quyền truy cập theo vai trò (Role-based Access Control - RBAC).
-  - Quy trình vận hành tiêu chuẩn (SOP) khi áp dụng AI trong doanh nghiệp xây dựng: Kiểm soát chất lượng 3 vòng.
-- **Nội dung thực hành (55'):**
-  - **Lab 06 - Đồ án tốt nghiệp:** Học viên/Nhóm học viên đóng vai Ban Quản trị dự án, vận hành hệ thống 6 Agent để xử lý một tình huống thay đổi thiết kế và phát sinh khối lượng khẩn cấp của công trình.
-- **Sản phẩm nghiệm thu (Deliverable D6 - Capstone Project):**
-  - Bản báo cáo Đồ án tốt nghiệp: Bộ AI Workspace tích hợp 6 Agent + Thư viện Promptbook doanh nghiệp + Video/Biên bản trình diễn luồng vận hành.
+### Buổi 06: RÁP TRỌN QUY TRÌNH: TỪ Ý TƯỞNG CỦA CHỦ NHÀ ĐẾN BỘ HỒ SƠ GỬI KHÁCH (ĐỒ ÁN CUỐI KHÓA)
+- **Mục tiêu:** Chạy trọn dây chuyền 7 chặng trên căn nhà của học viên: đầu vào, chốt thông số, bản vẽ AutoCAD, mô hình Blender, phối cảnh AI, khối lượng, hồ sơ gửi khách; đặt 3 cổng duyệt người; xử lý một yêu cầu đổi ý của chủ nhà; đóng gói quy trình thành skill.
+- **Nội dung lý thuyết (20'):**
+  - Bàn giao giữa các chặng bằng file; thư mục hồ sơ chuẩn cho một công trình; thư mục phát hành `yymmdd_lan-N` không sửa, không xóa.
+  - Ba cổng duyệt người: chốt thông số, duyệt bản vẽ, duyệt trước khi gửi khách; AI không tự gửi ra ngoài.
+  - Điều phối đội agent bằng CLAUDE.md dự án, `/plan`, `/goal`; nguyên tắc "bản vẽ là nguồn" khi chủ nhà đổi ý.
+- **Nội dung thực hành (95'):**
+  - **Lab 06, đồ án cuối khóa:** Học viên chạy 7 chặng trên căn nhà của mình, phát hành hồ sơ lần 1; xử lý tình huống đổi ý, phát hành lần 2 kèm so sánh khối lượng; đóng gói skill `ho-so-nha-pho`.
+- **Sản phẩm nghiệm thu (Deliverable D6, Capstone Project):**
+  - Thư mục công trình chuẩn + Hồ sơ phát hành lần 1 và lần 2 (PDF gộp gửi khách, thư nháp) + Nhật ký quy trình có 3 cổng duyệt + Skill hoặc sổ prompt dùng lại.
 
 ---
 
