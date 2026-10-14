@@ -19,6 +19,7 @@ Sau buổi học, học viên:
 3. **Đặt cổng duyệt người** ở những chỗ sai thì tốn kém: chốt thông số, duyệt bản vẽ, duyệt trước khi gửi khách. AI không tự gửi gì ra ngoài.
 4. **Xử lý một yêu cầu đổi ý của chủ nhà** bằng cách sửa bản vẽ rồi chạy lại các chặng sau, phát hành hồ sơ lần 2.
 5. **Đóng gói quy trình thành skill** dùng lại cho công trình kế tiếp.
+6. **Biết thêm Pascal Editor**: công cụ dựng mô hình nhẹ chạy trên trình duyệt, khi nào dùng thay hoặc cùng Blender.
 
 ---
 
@@ -26,8 +27,9 @@ Sau buổi học, học viên:
 
 ```
 00:00 - 00:10 (10')  Mở đầu: nhìn lại 5 buổi, sơ đồ dây chuyền 7 chặng
-00:10 - 00:30 (20')  Lý thuyết: bàn giao bằng file, 3 cổng duyệt, thư mục hồ sơ chuẩn, điều phối đội agent
-00:30 - 01:00 (30')  Thị phạm: giảng viên chạy nhanh 7 chặng trên căn nhà mẫu, dừng ở từng cổng duyệt
+00:10 - 00:25 (15')  Lý thuyết: bàn giao bằng file, 3 cổng duyệt, thư mục hồ sơ chuẩn, điều phối đội agent
+00:25 - 00:50 (25')  Thị phạm: giảng viên chạy nhanh 7 chặng trên căn nhà mẫu, dừng ở từng cổng duyệt
+00:50 - 01:00 (10')  Giới thiệu Pascal Editor: dựng nhanh mô hình xem trên trình duyệt, cắt tầng, bung tầng, xuất IFC
 01:00 - 01:10 (10')  Nghỉ giải lao
 01:10 - 02:05 (55')  Đồ án Lab 06: học viên chạy 7 chặng trên căn nhà của mình, phát hành lần 1
 02:05 - 02:15 (10')  Tình huống đổi ý: chủ nhà sửa một chi tiết, phát hành lần 2
@@ -43,11 +45,12 @@ Sau buổi học, học viên:
 | MCP `chatgpt-image` đăng nhập | Prompt C1 Buổi 05 trả về đã đăng nhập |
 | 3 agent Buổi 05 có trong `~/.claude/agents/` (để dùng ở mọi thư mục) | Prompt 0.2 bên dưới |
 | Chuẩn bị 1 căn nhà mẫu cho thị phạm (ảnh mẫu + 5 dòng yêu cầu chủ nhà) | Nên chạy thử trọn 7 chặng tối hôm trước |
-| Học viên mang căn nhà của mình (bài về nhà Buổi 05) | Ai không có thì dùng đề dự phòng ở mục 7.2 |
+| Học viên mang căn nhà của mình (bài về nhà Buổi 05) | Ai không có thì dùng đề dự phòng ở mục 8 |
+| Pascal Editor chạy sẵn, mở được dự án nhà 7x20m (mục 4.2) | Lệnh `pascal status` báo đang chạy |
 
 ---
 
-## 3. MỞ ĐẦU VÀ LÝ THUYẾT (30 PHÚT)
+## 3. MỞ ĐẦU VÀ LÝ THUYẾT (25 PHÚT)
 
 ### 3.1. Năm buổi vừa qua là năm khúc của một dây chuyền (10 phút)
 
@@ -66,9 +69,9 @@ Sau buổi học, học viên:
 | 4. Mô hình | DXF | File mô tả JSON, `.blend`, ảnh phối cảnh, ảnh tách tầng | vn-blender, script dựng nhà Buổi 04 | Tự kiểm: số cửa khớp bảng |
 | 5. Phối cảnh AI | Ảnh render Blender | 2 đến 3 ảnh phong cách + bảng so sánh | Agent `render-phong-cach` | Tự kiểm: giữ kiến trúc |
 | 6. Khối lượng | File mô tả JSON | BOQ Excel + tóm tắt | Agent `boc-khoi-luong`, `kiem-tra-khoi-luong` | Tự kiểm: agent kiểm tra |
-| 7. Hồ sơ gửi khách | Đầu ra chặng 3 đến 6 | PDF gộp + thư gửi khách (nháp) trong `04-phat-hanh/yymmdd_lan-N/` | Python ghép PDF, Excel xuất PDF | **Cổng 3: kỹ sư chủ trì gửi** |
+| 7. Hồ sơ gửi khách | Đầu ra chặng 3 đến 6 | PDF gộp + thư gửi khách (nháp) trong `06-phat-hanh/yymmdd_lan-N/` | Python ghép PDF, Excel xuất PDF | **Cổng 3: kỹ sư chủ trì gửi** |
 
-### 3.2. Ba nguyên tắc ráp dây chuyền (10 phút)
+### 3.2. Ba nguyên tắc ráp dây chuyền (5 phút)
 
 1. **Bàn giao bằng file, không bằng trí nhớ.** Mỗi chặng ghi kết quả ra file trong thư mục hồ sơ; chặng sau đọc file đó. Nhờ vậy subagent (không thấy cuộc trò chuyện) vẫn làm đúng, và hôm sau mở phiên mới vẫn làm tiếp được.
 2. **Cổng duyệt đặt ở chỗ sai thì đắt.** Sai thông số thì vẽ lại cả bộ; sai bản vẽ thì mô hình, ảnh, khối lượng đều sai theo; gửi nhầm cho khách thì không lấy lại được. Ba chỗ đó **người duyệt**, AI dừng chờ. Các chặng còn lại để agent tự kiểm chéo.
@@ -93,19 +96,51 @@ Sau buổi học, học viên:
 
 ---
 
-## 4. KỊCH BẢN THỊ PHẠM 30 PHÚT
+## 4. THỊ PHẠM 25 PHÚT VÀ GIỚI THIỆU PASCAL EDITOR 10 PHÚT
+
+### 4.1. Kịch bản thị phạm 7 chặng (25 phút)
 
 | Phút | Việc | Prompt | Điểm nhấn cho lớp |
 |---|---|---|---|
 | 0 đến 3 | Tạo thư mục, CLAUDE.md dự án | 0.1 | Một lần cho mỗi công trình |
-| 3 đến 6 | Chặng 1: đọc ảnh mẫu, yêu cầu | 1.1 | Thông tin thiếu thì ghi `[Chờ bổ sung]`, không đoán |
-| 6 đến 10 | Chặng 2: `/plan` chốt thông số | 2.1 | **Cổng 1**: dừng hỏi, giảng viên sửa 1 thông số rồi duyệt |
-| 10 đến 18 | Chặng 3: vẽ 4 tờ, xuất PDF, DXF | 3.1 | **Cổng 2**: mở PDF xem tận mắt (bài học "PDF trắng" Buổi 04) |
-| 18 đến 22 | Chặng 4: dựng Blender, tách tầng | 4.1 | Số cửa trên mô hình khớp bảng cửa |
-| 22 đến 26 | Chặng 5 và 6 chạy song song | 5.1 | Mở bảng Tasks: 2 agent cùng chạy |
-| 26 đến 30 | Chặng 7: ghép PDF, soạn thư, `/goal` kiểm đủ | 7.1, 7.2 | **Cổng 3**: AI dừng, không gửi |
+| 3 đến 5 | Chặng 1: đọc ảnh mẫu, yêu cầu | 1.1 | Thông tin thiếu thì ghi `[Chờ bổ sung]`, không đoán |
+| 5 đến 9 | Chặng 2: `/plan` chốt thông số | 2.1 | **Cổng 1**: dừng hỏi, giảng viên sửa 1 thông số rồi duyệt |
+| 9 đến 16 | Chặng 3: vẽ 4 tờ, xuất PDF, DXF | 3.1 | **Cổng 2**: mở PDF xem tận mắt (bài học "PDF trắng" Buổi 04) |
+| 16 đến 19 | Chặng 4: dựng Blender, tách tầng | 4.1 | Số cửa trên mô hình khớp bảng cửa |
+| 19 đến 22 | Chặng 5 và 6 chạy song song | 5.1 | Mở bảng Tasks: 2 agent cùng chạy |
+| 22 đến 25 | Chặng 7: ghép PDF, soạn thư, `/goal` kiểm đủ | 7.1, 7.2 | **Cổng 3**: AI dừng, không gửi |
 
 Nếu một chặng chạy lâu (AutoCAD, render), giảng viên mở sẵn kết quả của lần chạy thử tối hôm trước để không mất nhịp.
+
+### 4.2. Giới thiệu Pascal Editor (10 phút, giảng viên thị phạm, học viên tự thử ở nhà)
+
+**Pascal Editor là gì:** phần mềm dựng mô hình 3D công trình chạy trên trình duyệt, mã nguồn mở (giấy phép MIT), có sẵn MCP để AI điều khiển. Repo `pascalorg/editor`, bản 1.0.3 phát hành 24/09/2026 (tra 10/10/2026). Dữ liệu lưu trên máy, không cần tài khoản.
+
+**Đã chạy thử trên nhà 7x20m ngày 10/10/2026** (ảnh trong `demo/01-thu-nghiem-pascal/`): Claude đọc file mô tả bản vẽ Buổi 04, dựng 4 tầng, 27 tường, 30 cửa khớp bảng thống kê, 3 cầu thang, 3 mái, sân, rào, cổng, nhà xe pergola, 19 món nội thất.
+
+**Chiếu theo thứ tự:**
+1. Ảnh `01_mat-tien.jpg` đến `06_goc-sau-ben-trai.jpg`: 6 góc ngoài nhà.
+2. Ảnh `07_bung-tang.jpg`, `08_bung-tang-cat-tuong.jpg`: bung tầng, cắt thấp tường.
+3. Ảnh `10_mat-cat-tang-1.jpg` đến `13_mat-cat-tang-mai-tum.jpg`: xem riêng từng tầng.
+4. Mở thẳng trình duyệt cho lớp xoay mô hình: giữ chuột phải kéo để xoay, lăn chuột để phóng to.
+
+**So với Blender: dùng mỗi công cụ một việc**
+
+| | Pascal Editor | Blender (Buổi 04, 05) |
+|---|---|---|
+| Cài đặt | Một lệnh npm, chạy trên trình duyệt | Blender, addon, bật kết nối, khai báo MCP |
+| Cách dựng | Theo đối tượng kiến trúc: tường, cửa nằm trong tường, sàn, thang, mái | Theo khối hình học; script tự cắt lỗ cửa |
+| Xem cho kỹ sư | Bấm nút là có cắt tầng, bung tầng, mặt bằng 2D | Mỗi kiểu xem phải viết script |
+| Tự kiểm bố trí | Có: báo đồ chắn cửa, đồ chồng nhau | Không |
+| Xuất IFC sang BIM | Có trong giao diện web (chưa thử trên lớp) | Không có sẵn |
+| Ảnh đẹp gửi khách | Màu trơn, không vân vật liệu | Vật liệu, ánh sáng, bóng đổ thật; kết hợp ChatGPT đổi phong cách |
+| Đồ đạc | Thư viện 23 món, không có xe, cây, máy lạnh | Dựng được mọi thứ |
+| Cao độ | Mặt đất cố định ở cốt 0: sân thấp hơn nền 0,45 m không thể hiện được | Đúng cốt bản vẽ |
+| Mặt cắt đứng | Không có trong bản mã nguồn mở | Dựng được |
+
+**Câu chốt:** Pascal để **xem nhanh, kiểm bố trí, đưa sang BIM**; Blender để **làm ảnh gửi khách**. Bản vẽ AutoCAD vẫn là nguồn của cả hai.
+
+**Cài cho học viên tự thử ở nhà (cần Node.js 22.13 trở lên):** xem Prompt P.1 và P.2 ở mục 7.
 
 ---
 
@@ -334,6 +369,30 @@ Chủ nhà yêu cầu: <dán yêu cầu đổi ý>.
 Tạo xong đọc lại file, rồi cho tôi biết cách gọi: gõ /ho-so-nha-pho trong phiên mới.
 ```
 
+### PASCAL EDITOR (TỰ THỬ Ở NHÀ)
+
+### Prompt P.1: Cài Pascal và khai báo MCP (chạy trong PowerShell)
+
+```powershell
+npm install --global @pascal-app/cli
+pascal editor
+claude mcp add pascal -s user '--' cmd /c pascal mcp connect
+claude mcp list
+```
+Ghi chú chạy thử 10/10/2026 trên Windows: lệnh tự khai báo `pascal mcp setup claude` báo lỗi đòi đúng phiên bản CLI dù đã cài đúng, nên khai báo tay như trên. `'--'` phải có ngoặc đơn trên PowerShell (giống Buổi 05). Trình chỉnh sửa mở tại địa chỉ `http://pascal.localhost:<cổng>` do lệnh `pascal editor` in ra; tắt bằng `pascal stop`. Mở phiên Claude mới sau khi khai báo.
+
+### Prompt P.2: Dựng nhà từ file mô tả bản vẽ
+
+```
+Dùng MCP pascal dựng mô hình nhà từ file mô tả bản vẽ 04-mo-hinh-3d\03_mo-ta-tu-ban-ve.json (đơn vị mm, đọc từ DXF).
+Trước khi dựng: đọc pascal://agent-guide và xem tham số các công cụ create_project, create_level, create_wall, add_door, add_window, create_stair_between_levels, create_roof.
+Quy ước: Pascal dùng mét; x bản vẽ thành X, y bản vẽ thành Z, Y hướng lên.
+Lưu ý: tường trong file mô tả đã bị cắt sẵn tại lỗ cửa và dừng tại cột; Pascal cần tường liền rồi đặt cửa theo tỷ lệ t dọc tường. Hãy viết script Python nối các đoạn tường, cột, lỗ cửa thẳng hàng thành một tường và tính t cho từng cửa, rồi mới gọi công cụ.
+Dựng đủ: các tầng theo cao độ, tường, cửa, lan can, sàn có lỗ thang, cầu thang, mái, sân, rào, cổng, pergola. Không bịa hình học không có trong file.
+Xong: save_scene, validate_scene, verify_scene, báo editorUrl và bảng đếm tường, cửa so với bảng thống kê cửa.
+```
+Kết quả mẫu và script nối tường: `demo/01-thu-nghiem-pascal/` (`chuyen-sang-pascal.py`, `14_bao-cao-dung-pascal.md`).
+
 ---
 
 ## 8. ĐỀ DỰ PHÒNG CHO HỌC VIÊN KHÔNG MANG CĂN NHÀ
@@ -375,6 +434,8 @@ Các thông số chưa có (chiều cao tầng, bảng cửa) học viên để 
 | `/plan`, chế độ lập kế hoạch | `code.claude.com/docs/en/permission-modes`, tra 10/10/2026 |
 | Script vẽ, đọc bản vẽ, dựng Blender, tách tầng | `04_Buoi_04.../demo/07-nha-pho-lo-7x20m/scripts/`, chạy trên nhà 7x20m ngày 07/10 và 10/10/2026 |
 | Agent render, agent bóc khối lượng, MCP tạo ảnh | Buổi 05, chạy thử 10/10/2026 |
+| Pascal Editor: MIT, bản 1.0.3 ngày 24/09/2026, Node.js 22.13, 49 công cụ MCP, xuất IFC/GLB/OBJ/STL/USDZ trong giao diện web | README và mã nguồn `pascalorg/editor`, tra 10/10/2026 |
+| Pascal dựng nhà 7x20m: 27 tường, 30 cửa, giới hạn cốt sân, thư viện 23 món | Chạy thử 10/10/2026, `demo/01-thu-nghiem-pascal/14_bao-cao-dung-pascal.md` |
 
 **Giới hạn cần nói rõ với lớp:**
 - Các chặng 3 và 4 đã chạy trọn trên nhà 7x20m. Với căn nhà khác, script vẽ chỉ cần sửa khối dữ liệu, nhưng **giảng viên nên chạy thử trọn 7 chặng trên căn nhà thị phạm tối hôm trước**.

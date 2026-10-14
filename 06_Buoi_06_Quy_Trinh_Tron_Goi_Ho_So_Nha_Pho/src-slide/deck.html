@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buổi 06: Ráp trọn quy trình hồ sơ nhà phố</title>
+<link rel="stylesheet" href="C:/Users/Admin/.claude/skills/slidefly/assets/morph-base.css">
+<link rel="stylesheet" href="C:/Users/Admin/.claude/skills/slidefly/assets/morph-layouts.css">
+<link rel="stylesheet" href="C:/Users/Admin/.claude/skills/slidefly/assets/morph-layouts-plus.css">
+<link rel="stylesheet" href="C:/Users/Admin/.claude/skills/slidefly/assets/morph-frames.css">
+<link rel="stylesheet" href="C:/Users/Admin/.claude/skills/slidefly/assets/morph-photo.css">
+<link rel="stylesheet" href="C:/Users/Admin/.claude/skills/slidefly/assets/morph-mock.css">
+<link rel="stylesheet" href="C:/Users/Admin/.claude/skills/slidefly/assets/morph-brand.css">
+<link rel="stylesheet" href="C:/Users/Admin/.claude/skills/slidefly/assets/styles/swiss-modern.css">
+<link rel="stylesheet" href="C:/Users/Admin/.claude/skills/slidefly/assets/morph-motion.css">
+<link rel="stylesheet" href="C:/Users/Admin/.claude/skills/slidefly/assets/morph-viz.css">
+<link rel="stylesheet" href="C:/Users/Admin/.claude/skills/slidefly/assets/morph-icons.css">
+<style>
+.slide .src { font: 400 20px/1.3 var(--font-body); color: var(--muted); }
+.slide code { font-family: 'Consolas', 'Courier New', monospace; }
+.ft { position: absolute; left: 120px; top: 110px; margin: 0; font: 800 60px/1.05 var(--font-display); letter-spacing: -0.02em; color: var(--fg); max-width: 1500px; }
+.chot { font: 700 32px/1.3 var(--font-display); color: var(--fg); border-left: 10px solid var(--accent); padding: 6px 0 6px 28px; }
+.abs { position: absolute; }
+
+/* bia */
+.s-cover .c-kicker { position: absolute; left: 120px; top: 110px; font: 700 26px/1 var(--font-body); letter-spacing: .14em; color: var(--accent); text-transform: uppercase; }
+.s-cover .c-khoa { position: absolute; left: 120px; top: 160px; width: 900px; font: 600 28px/1.3 var(--font-body); color: var(--muted); }
+.s-cover h1 { position: absolute; left: 120px; top: 290px; width: 1060px; margin: 0; font: 900 104px/0.98 var(--font-display); letter-spacing: -0.04em; color: var(--fg); }
+.s-cover .c-sub { position: absolute; left: 120px; top: 660px; width: 960px; font: 500 34px/1.3 var(--font-body); }
+.s-cover .c-msg { position: absolute; left: 120px; top: 810px; width: 960px; font: 700 30px/1.3 var(--font-display); color: #fff; background: var(--ink); padding: 22px 30px; box-sizing: border-box; }
+.s-cover .c-meta { position: absolute; left: 120px; bottom: 56px; font: 500 24px/1 var(--font-body); color: var(--muted); }
+.s-cover .c-img { position: absolute; right: 0; top: 0; width: 640px; height: 1080px; object-fit: cover; object-position: 50% 40%; }
+.s-cover .c-red { position: absolute; right: 640px; top: 0; width: 24px; height: 1080px; background: var(--accent); }
+
+/* day chuyen */
+.s-line .st { position: absolute; top: 480px; width: 214px; height: 300px; background: #f2f2f2; border-top: 10px solid var(--ink); padding: 18px; box-sizing: border-box; }
+.s-line .st b { display: block; font: 900 64px/1 var(--font-display); color: var(--accent); }
+.s-line .st h3 { margin: 10px 0 8px; font: 800 30px/1.1 var(--font-display); }
+.s-line .st p { margin: 0; font: 400 23px/1.3 var(--font-body); color: var(--muted); }
+.s-line .rail { position: absolute; left: 120px; top: 440px; width: 1680px; height: 6px; background: var(--ink); }
+.s-line .dot { position: absolute; left: 0; top: 0; width: 34px; height: 34px; border-radius: 50%; background: var(--accent); }
+.s-line .gate { position: absolute; top: 830px; width: 214px; text-align: center; font: 900 32px/1.1 var(--font-display); color: var(--accent); border: 5px solid var(--accent); padding: 12px 0; letter-spacing: .06em; }
+.s-line .t { position: absolute; left: 120px; top: 260px; width: 1600px; font: 500 30px/1.35 var(--font-body); }
+
+/* bang chang */
+.s-tb table { position: absolute; left: 120px; top: 250px; width: 1680px; border-collapse: collapse; font: 400 28px/1.3 var(--font-body); }
+.s-tb th { background: var(--ink); color: #fff; text-align: left; padding: 14px 16px; font: 700 23px/1.2 var(--font-display); }
+.s-tb td { padding: 20px 16px; border-bottom: 2px solid #e2e2e2; vertical-align: top; }
+.s-tb td:first-child { font-weight: 800; white-space: nowrap; }
+.s-tb tr.g td { background: #fff1ec; }
+.s-tb td.gate { color: var(--accent); font-weight: 800; }
+
+/* cong duyet */
+.s-gates .g { position: absolute; top: 300px; width: 520px; height: 520px; background: #f2f2f2; padding: 34px; box-sizing: border-box; }
+.s-gates .g .n { font: 900 120px/1 var(--font-display); color: var(--ink); }
+.s-gates .g h3 { margin: 10px 0 12px; font: 800 36px/1.1 var(--font-display); }
+.s-gates .g p { margin: 0; font: 400 26px/1.35 var(--font-body); }
+.s-gates .stamp { position: absolute; right: 28px; bottom: 30px; border: 6px solid var(--accent); color: var(--accent); font: 900 40px/1 var(--font-display); padding: 12px 18px; letter-spacing: .08em; --rot: -12deg; }
+
+/* cay thu muc */
+.s-tree .code { position: absolute; left: 120px; top: 250px; width: 1060px; background: #111; color: #eaeaea; font: 400 31px/1.65 'Consolas', monospace; padding: 26px 34px; box-sizing: border-box; white-space: pre; }
+.s-tree .code .c { color: #9ad09a; } .s-tree .code .r { color: #ff8a65; }
+.s-tree .side { position: absolute; left: 1240px; top: 270px; width: 560px; }
+.s-tree .side p { font: 500 31px/1.4 var(--font-body); margin: 0 0 30px; }
+.s-tree .side b { color: var(--accent); }
+
+/* pascal */
+.s-pg .g { position: absolute; width: 820px; height: 360px; overflow: hidden; background: #eee; }
+.s-pg .g img { width: 820px; height: 360px; object-fit: cover; display: block; }
+.s-pg .g .lb { position: absolute; left: 0; bottom: 0; right: 0; background: rgba(17,17,17,.82); color: #fff; padding: 12px 18px; font: 600 22px/1.3 var(--font-body); }
+
+/* doi y */
+.s-chg .cd { position: absolute; top: 300px; width: 520px; height: 420px; padding: 30px; box-sizing: border-box; background: #f2f2f2; border-top: 12px solid var(--ink); }
+.s-chg .cd h3 { margin: 0 0 18px; font: 800 38px/1.15 var(--font-display); }
+.s-chg .cd p { margin: 0; font: 400 30px/1.35 var(--font-body); }
+.s-chg .cd.trap { border-top-color: var(--accent); }
+.s-chg .ans { position: absolute; left: 120px; top: 800px; width: 1680px; font: 800 34px/1.25 var(--font-display); color: var(--accent); }
+
+/* tong ket */
+.s-sum .row { position: absolute; left: 120px; width: 1680px; height: 190px; display: flex; align-items: center; border-bottom: 3px solid #e2e2e2; }
+.s-sum .row .n { width: 170px; font: 900 140px/1 var(--font-display); color: var(--accent); }
+.s-sum .row h3 { margin: 0; font: 900 58px/1.05 var(--font-display); letter-spacing: -0.02em; }
+.s-sum .row p { margin: 6px 0 0; font: 400 26px/1.3 var(--font-body); color: var(--muted); }
+
+/* ket */
+.s-end .bg { position: absolute; right: 0; top: 0; width: 760px; height: 1080px; object-fit: cover; }
+.s-end .k { position: absolute; left: 120px; top: 150px; font: 700 26px/1 var(--font-body); letter-spacing: .14em; color: var(--accent); text-transform: uppercase; }
+.s-end .l { position: absolute; left: 120px; top: 240px; width: 960px; font: 900 76px/1.02 var(--font-display); letter-spacing: -0.03em; }
+.s-end .l span { color: var(--accent); }
+.s-end .q { position: absolute; left: 120px; bottom: 80px; width: 960px; font: 500 26px/1.35 var(--font-body); color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<div class="deck-stage">
+  <div class="brand"><i class="ico" data-icon="building-skyscraper"></i><span class="brand-name">CES Global</span></div>
+
+  <!-- 01 BIA -->
+  <section class="slide s-cover" data-layout="free" data-brand="hide">
+    <img class="c-img" src="img/bung-tang.jpg" alt="Nhà phố 7x20m bung tầng trong Blender">
+    <div class="c-red"></div>
+    <p class="c-kicker reveal">Buổi 06 · Đồ án cuối khóa</p>
+    <p class="c-khoa reveal">Khóa đào tạo thực chiến: AI Agent trong Kỹ thuật &amp; Xây dựng</p>
+    <h1 class="reveal" data-morph-id="tieu-de">Ráp trọn quy trình hồ sơ nhà phố</h1>
+    <p class="c-sub reveal">Từ ý tưởng của chủ nhà đến bộ hồ sơ gửi khách: 7 chặng, 3 cổng duyệt</p>
+    <p class="c-msg reveal">"AI làm nhanh. Người chịu trách nhiệm ký."</p>
+    <p class="c-meta reveal">CES Global · aec.cesglobal.com.vn</p>
+  </section>
+
+  <!-- 02 MUC TIEU -->
+  <section class="slide" data-layout="content" data-frame="numbered">
+    <h2 class="title reveal">Sáu việc làm được sau buổi cuối</h2>
+    <ul class="bullets">
+      <li class="reveal"><b>Nhìn quy trình như dây chuyền 7 chặng</b>, mỗi chặng có file vào, file ra.</li>
+      <li class="reveal"><b>Chạy trọn 7 chặng</b> trên căn nhà của chính mình.</li>
+      <li class="reveal"><b>Đặt 3 cổng duyệt người</b> ở chỗ sai thì đắt; AI không tự gửi gì.</li>
+      <li class="reveal"><b>Xử lý chủ nhà đổi ý</b>: sửa bản vẽ, phát hành lần 2.</li>
+      <li class="reveal"><b>Đóng gói quy trình thành skill</b> cho công trình sau.</li>
+      <li class="reveal"><b>Biết thêm Pascal Editor</b> và khi nào dùng cùng Blender.</li>
+    </ul>
+    <aside class="highlight reveal-scale">
+      <div class="hl-icon"><i class="ico" data-icon="route"></i></div>
+      <p class="hl-text">Năm buổi là năm khúc của một dây chuyền</p>
+    </aside>
+  </section>
+
+  <!-- 03 LO TRINH -->
+  <section class="slide" data-layout="diagram" data-stage="clear">
+    <h2 class="title reveal">Lộ trình 150 phút</h2>
+    <div class="viz" data-viz="span" style="left:120px;right:120px;top:290px;bottom:160px"
+      data-values="10,15,25,10,10,55,10,15"
+      data-labels="Mở đầu|Lý thuyết|Thị phạm|Pascal|Nghỉ|Đồ án Lab 06|Đổi ý|D6, tổng kết"
+      data-sub="00:00|00:10|00:25|00:50|01:00|01:10|02:05|02:15" data-hot="6"
+      data-source="01_Giao_Trinh_Chi_Tiet_Buoi_06.md, mục 2"></div>
+    <p class="chot abs reveal" style="left:120px;bottom:70px;width:1500px;font-size:28px">Hơn một nửa buổi là học viên tự chạy trên căn nhà của mình.</p>
+  </section>
+
+  <!-- 04 DAY CHUYEN -->
+  <section class="slide s-line" data-layout="free" data-stage="clear">
+    <h2 class="ft reveal">Năm buổi, một dây chuyền 7 chặng</h2>
+    <p class="t reveal">Mỗi chặng đọc file của chặng trước và ghi file cho chặng sau.</p>
+    <div class="rail fx fx-growx"><span class="dot travel" style="offset-path:path('M0 3 L1650 3');--dur:4s"></span></div>
+    <div class="st fx fx-drop" style="left:120px"><b>1</b><h3>Đầu vào</h3><p>Ảnh, yêu cầu chủ nhà</p></div>
+    <div class="st fx fx-drop" style="left:363px;--d:.1s"><b>2</b><h3>Thông số</h3><p>/plan</p></div>
+    <div class="st fx fx-drop" style="left:606px;--d:.2s"><b>3</b><h3>Bản vẽ</h3><p>AutoCAD, Buổi 03, 04</p></div>
+    <div class="st fx fx-drop" style="left:849px;--d:.3s"><b>4</b><h3>Mô hình</h3><p>Blender, Buổi 04</p></div>
+    <div class="st fx fx-drop" style="left:1092px;--d:.4s"><b>5</b><h3>Phối cảnh AI</h3><p>Buổi 05</p></div>
+    <div class="st fx fx-drop" style="left:1335px;--d:.5s"><b>6</b><h3>Khối lượng</h3><p>BOQ, Buổi 05</p></div>
+    <div class="st fx fx-drop" style="left:1578px;--d:.6s;width:222px"><b>7</b><h3>Hồ sơ khách</h3><p>PDF gộp, thư nháp</p></div>
+    <p class="gate slam" data-step="1" style="left:363px">CỔNG 1</p>
+    <p class="gate slam" data-step="1" style="left:606px;--d:.2s">CỔNG 2</p>
+    <p class="gate slam" data-step="1" style="left:1578px;--d:.4s;width:222px">CỔNG 3</p>
+  </section>
+
+  <!-- 05 BANG CHANG -->
+  <section class="slide s-tb" data-layout="free" data-stage="clear">
+    <h2 class="ft reveal">Đầu vào, đầu ra và người duyệt</h2>
+    <table class="reveal">
+      <tr><th>Chặng</th><th>Đầu ra (file)</th><th>Công cụ</th><th>Ai duyệt</th></tr>
+      <tr><td>1. Đầu vào</td><td>01-ho-so-dau-vao/*.md, 00-thong-tin-cong-trinh.md</td><td>MarkItDown, đọc ảnh</td><td></td></tr>
+      <tr class="g"><td>2. Thông số</td><td>02-thong-so/01_phieu-thong-so.md</td><td>/plan</td><td class="gate">Cổng 1: kỹ sư chủ trì</td></tr>
+      <tr class="g"><td>3. Bản vẽ</td><td>DWG, DXF, PDF A3</td><td>MCP AutoCAD, script Buổi 04</td><td class="gate">Cổng 2: kỹ sư chủ trì</td></tr>
+      <tr><td>4. Mô hình</td><td>File mô tả JSON, .blend, ảnh</td><td>vn-blender</td><td>Số cửa khớp bảng</td></tr>
+      <tr><td>5. Phối cảnh AI</td><td>2 đến 3 ảnh + bảng so sánh</td><td>render-phong-cach</td><td>Giữ đúng kiến trúc</td></tr>
+      <tr><td>6. Khối lượng</td><td>BOQ Excel + tóm tắt</td><td>boc-khoi-luong, kiem-tra</td><td>Agent kiểm tra</td></tr>
+      <tr class="g"><td>7. Hồ sơ khách</td><td>06-phat-hanh/yymmdd_lan-N/</td><td>Python ghép PDF</td><td class="gate">Cổng 3: kỹ sư gửi</td></tr>
+    </table>
+  </section>
+
+  <!-- 06 CHUONG -->
+  <section class="slide" data-layout="chapter">
+    <p class="ch-num reveal-scale" aria-hidden="true">01</p>
+    <h2 class="title reveal" data-morph-id="chuong">Ba nguyên tắc ráp dây chuyền</h2>
+    <p class="subtitle reveal">File, cổng duyệt, bản vẽ là nguồn</p>
+  </section>
+
+  <!-- 07 FILE -->
+  <section class="slide" data-layout="statement">
+    <p class="kicker reveal">Nguyên tắc 1</p>
+    <h2 class="statement reveal">Bàn giao bằng <mark>file</mark>, không bằng trí nhớ.</h2>
+    <p class="src abs fx fx-up" data-step="1" style="left:120px;bottom:100px;width:1500px;font-size:28px">Subagent không thấy cuộc trò chuyện, nhưng đọc được file. Hôm sau mở phiên mới vẫn làm tiếp được.</p>
+  </section>
+
+  <!-- 08 CONG DUYET -->
+  <section class="slide s-gates" data-layout="free" data-stage="clear">
+    <h2 class="ft reveal">Nguyên tắc 2: cổng duyệt đặt ở chỗ sai thì đắt</h2>
+    <div class="g reveal" style="left:120px"><p class="n">1</p><h3>Chốt thông số</h3><p>Sai ở đây thì vẽ lại cả bộ.</p><span class="stamp slam" data-step="1">DUYỆT</span></div>
+    <div class="g reveal" style="left:700px"><p class="n">2</p><h3>Duyệt bản vẽ</h3><p>Sai bản vẽ thì mô hình, ảnh, khối lượng sai theo.</p><span class="stamp slam" data-step="2">DUYỆT</span></div>
+    <div class="g reveal" style="left:1280px"><p class="n">3</p><h3>Trước khi gửi khách</h3><p>Gửi nhầm thì không lấy lại được. AI dừng, không tự gửi.</p><span class="stamp slam" data-step="3">DUYỆT</span></div>
+    <p class="src abs" style="left:120px;bottom:80px;font-size:24px">Các chặng còn lại để agent tự kiểm chéo.</p>
+  </section>
+
+  <!-- 09 BAN VE LA NGUON -->
+  <section class="slide" data-layout="diagram" data-stage="clear">
+    <h2 class="title reveal">Nguyên tắc 3: bản vẽ là nguồn</h2>
+    <div class="viz" data-viz="network" style="left:120px;right:120px;top:240px;bottom:120px"
+      data-hub="Bản vẽ AutoCAD" data-nodes="File mô tả JSON|Mô hình Blender|Ảnh phối cảnh AI|BOQ Excel|PDF gửi khách|Mô hình Pascal"
+      data-sub="đọc từ DXF|dựng lại|sơn lại|bóc lại|ghép lại|xem nhanh, IFC" data-on="1,2,3,4,5"></div>
+    <p class="chot abs fx fx-up" data-step="1" style="left:120px;bottom:50px;width:1680px;font-size:28px">Chủ nhà đổi ý: sửa bản vẽ, chạy lại chặng 4 đến 7. Không sửa tay mô hình, ảnh hay Excel.</p>
+  </section>
+
+  <!-- 10 THU MUC -->
+  <section class="slide s-tree" data-layout="free" data-stage="clear">
+    <h2 class="ft reveal">Một căn nhà, một thư mục chuẩn</h2>
+    <div class="code reveal-left"><span class="c">ct-01-nha-pho-anh-a\</span>
+├── CLAUDE.md              <span class="c">7 chặng, 3 cổng</span>
+├── 00-thong-tin-cong-trinh.md
+├── 01-ho-so-dau-vao\
+├── 02-thong-so\
+├── 03-ban-ve\
+├── 04-mo-hinh-3d\
+├── 05-khoi-luong\
+├── <span class="r">06-phat-hanh\yymmdd_lan-N\</span>
+└── _backup\</div>
+    <div class="side">
+      <p class="reveal">CLAUDE.md dự án ghi quy trình và chữ <b>"DỪNG, chờ tôi duyệt"</b> ở 3 cổng.</p>
+      <p class="reveal">Thư mục <b>phát hành</b> là hồ sơ đã gửi: không sửa, không xóa.</p>
+      <p class="fx fx-up" data-step="1">Lần gửi sau tạo <b>lan-2</b>, lan-1 giữ nguyên để đối chiếu.</p>
+    </div>
+  </section>
+
+  <!-- 11 CHUONG THI PHAM -->
+  <section class="slide" data-layout="chapter">
+    <p class="ch-num reveal-scale" aria-hidden="true">02</p>
+    <h2 class="title reveal" data-morph-id="chuong">Thị phạm 7 chặng trong 25 phút</h2>
+    <p class="subtitle reveal">Dừng ở từng cổng duyệt</p>
+  </section>
+
+  <!-- 12 THOI GIAN THI PHAM -->
+  <section class="slide" data-layout="diagram" data-stage="clear">
+    <h2 class="title reveal">25 phút chia thế nào</h2>
+    <div class="viz" data-viz="span" style="left:120px;right:120px;top:290px;bottom:170px"
+      data-values="3,2,4,7,3,3,3"
+      data-labels="Thư mục, CLAUDE.md|Đầu vào|Thông số /plan|Bản vẽ AutoCAD|Blender|AI + BOQ song song|PDF, /goal"
+      data-sub="0.1|1.1|2.1|3.1|4.1|5.1|7.1, 7.2" data-hot="3"
+      data-source="01_Giao_Trinh_Chi_Tiet_Buoi_06.md, mục 4.1"></div>
+    <p class="chot abs reveal" style="left:120px;bottom:70px;width:1680px;font-size:28px">Chặng chạy lâu thì mở sẵn kết quả chạy thử tối hôm trước để không mất nhịp.</p>
+  </section>
+
+  <!-- 13 PLAN CONG 1 -->
+  <section class="slide" data-layout="diagram" data-stage="clear">
+    <h2 class="title reveal">Cổng 1: /plan dừng chờ người duyệt</h2>
+    <div class="mock mock-chat" data-title="Claude Code Desktop · plan mode" style="left:120px;top:250px;width:1100px;height:700px">
+      <div class="msg user type">/plan Từ 00-thong-tin-cong-trinh.md và ảnh mẫu, lập phiếu thông số thiết kế: lô đất, trục, cốt tầng, phòng, bảng cửa, mái. Thông số tự đề xuất đánh dấu (đề xuất).</div>
+      <div class="msg ai lines think" data-who="Claude" data-step="1">
+        <p>Phiếu thông số đã lập.</p>
+        <p>Các thông số đánh dấu (đề xuất) cần anh duyệt.</p>
+        <p>Duyệt kế hoạch? Có / Sửa tiếp</p>
+      </div>
+    </div>
+    <ul class="abs" style="left:1290px;top:270px;width:520px;margin:0;padding-left:30px;font:500 28px/1.4 var(--font-body)">
+      <li class="reveal">Đọc phiếu</li>
+      <li class="reveal">Sửa ít nhất 1 thông số</li>
+      <li class="reveal">Rồi mới duyệt</li>
+    </ul>
+    <p class="chot abs fx fx-up" data-step="2" style="left:1290px;top:640px;width:520px;font-size:28px">Sửa trên giấy rẻ hơn sửa trên 4 tờ đã vẽ.</p>
+    <p class="src abs" style="left:1290px;top:860px;width:520px">Câu trả lời trong khung là ví dụ minh họa.</p>
+  </section>
+
+  <!-- 14 GOAL -->
+  <section class="slide" data-layout="diagram" data-stage="clear">
+    <h2 class="title reveal">Chặng 7: /goal kiểm hồ sơ đủ chưa</h2>
+    <div class="mock mock-term" data-title="Claude Code Desktop" style="left:120px;top:250px;width:1100px;height:500px">
+      <div class="cmd type" style="--prompt:'> '">/goal Thư mục lan-1 có PDF gộp mọi trang có nội dung, có bìa, bản vẽ, phối cảnh, ghi chú ảnh AI, bảng khối lượng, thư nháp; số cửa bản vẽ, file mô tả, BOQ bằng nhau. Hoặc dừng sau 15 lượt.</div>
+      <div data-step="1"><div class="out lines"><p>Lượt 1: thiếu ghi chú ảnh AI ở 2 trang</p><p class="hi">Chấm: chưa đạt</p><p>Lượt 2: thêm ghi chú, đếm lại trang</p><p class="ok">Chấm: đạt, goal tự tắt</p></div></div>
+    </div>
+    <ul class="abs" style="left:1290px;top:270px;width:520px;margin:0;padding-left:30px;font:500 28px/1.4 var(--font-body)">
+      <li class="reveal">Một mô hình khác chấm sau mỗi lượt</li>
+      <li class="reveal">Điều kiện phải đo được</li>
+      <li class="reveal">Không tự cấp quyền, không tự gửi</li>
+    </ul>
+    <p class="chot abs fx fx-up" data-step="1" style="left:120px;top:800px;width:1680px;font-size:30px">Hồ sơ đủ thì AI dừng ở cổng 3, chờ anh chị tự gửi cho chủ nhà.</p>
+    <p class="src abs" style="left:120px;bottom:50px">Diễn biến các lượt là minh họa. Nguồn: code.claude.com/docs/en/goal, tra 10/10/2026</p>
+  </section>
+
+  <!-- 15 CHUONG PASCAL -->
+  <section class="slide" data-layout="chapter">
+    <p class="ch-num reveal-scale" aria-hidden="true">03</p>
+    <h2 class="title reveal" data-morph-id="chuong">Biết thêm: Pascal Editor</h2>
+    <p class="subtitle reveal">Dựng mô hình nhẹ trên trình duyệt, AI điều khiển qua MCP</p>
+  </section>
+
+  <!-- 16 PASCAL LA GI -->
+  <section class="slide" data-layout="split-photo" data-stage="clear">
+    <img class="split-img" src="img/pascal-mat-tien.jpg" alt="Nhà 7x20m dựng trong Pascal Editor" style="--focus: 50% 50%">
+    <div class="split-text">
+      <p class="kicker reveal">Đã chạy thử 10/10/2026</p>
+      <h2 class="title reveal">Pascal dựng lại nhà 7x20m từ chính file bản vẽ</h2>
+      <ul class="bullets">
+        <li class="reveal">Mã nguồn mở MIT, bản 1.0.3, chạy trên trình duyệt</li>
+        <li class="reveal">27 tường, 30 cửa khớp bảng thống kê, 3 thang, 3 mái</li>
+        <li class="reveal">Sân, rào, cổng, nhà xe pergola</li>
+      </ul>
+    </div>
+    <p class="photo-credit">Ảnh chụp màn hình Pascal Editor, repo pascalorg/editor</p>
+  </section>
+
+  <!-- 17 PASCAL ANH -->
+  <section class="slide s-pg" data-layout="free" data-stage="clear">
+    <h2 class="ft reveal">Bấm một nút: cắt tầng, bung tầng</h2>
+    <div class="g fx fx-pop" style="left:120px;top:240px"><img src="img/pascal-bung-tang.jpg" alt="Bung tầng"><div class="lb">Bung tầng</div></div>
+    <div class="g fx fx-pop" style="left:980px;top:240px;--d:.12s"><img src="img/pascal-bung-tang-cat-tuong.jpg" alt="Bung tầng cắt thấp tường"><div class="lb">Bung tầng, cắt thấp tường</div></div>
+    <div class="g fx fx-pop" style="left:120px;top:630px;--d:.24s"><img src="img/pascal-mat-cat-tang-1.jpg" alt="Mặt cắt tầng 1"><div class="lb">Riêng tầng 1: nhà xe, phòng khách, bếp</div></div>
+    <div class="g fx fx-pop" style="left:980px;top:630px;--d:.36s"><img src="img/pascal-mat-cat-tang-2.jpg" alt="Mặt cắt tầng 2"><div class="lb">Riêng tầng 2: phòng ngủ, ban công</div></div>
+  </section>
+
+  <!-- 18 SO SANH -->
+  <section class="slide" data-layout="compare-table" data-stage="clear">
+    <h2 class="title reveal">Pascal và Blender: mỗi công cụ một việc</h2>
+    <table class="ctable reveal">
+      <thead><tr><th></th><th class="pick">Pascal Editor</th><th>Blender (Buổi 04, 05)</th></tr></thead>
+      <tbody>
+        <tr><th>Cài đặt</th><td class="pick"><span class="yes">Một lệnh npm, chạy trên trình duyệt</span></td><td>Blender, addon, kết nối, MCP</td></tr>
+        <tr><th>Cách dựng</th><td class="pick"><span class="yes">Theo tường, cửa, sàn, thang, mái</span></td><td>Khối hình học, script tự cắt cửa</td></tr>
+        <tr><th>Xem cho kỹ sư</th><td class="pick"><span class="yes">Cắt tầng, bung tầng, 2D sẵn</span></td><td>Mỗi kiểu xem viết script</td></tr>
+        <tr><th>Xuất IFC</th><td class="pick"><span class="yes">Có trong giao diện web</span></td><td class="no">Không có sẵn</td></tr>
+        <tr><th>Ảnh gửi khách</th><td class="pick no">Màu trơn, 23 món đồ</td><td><span class="yes">Vật liệu, ánh sáng thật</span></td></tr>
+        <tr><th>Cốt sân</th><td class="pick no">Mặt đất cố định ở cốt 0</td><td><span class="yes">Đúng cốt -0,45 m</span></td></tr>
+      </tbody>
+    </table>
+    <p class="src abs" style="left:120px;bottom:44px">Chạy thử 10/10/2026; README pascalorg/editor. Nút xuất IFC chưa thử trên lớp.</p>
+  </section>
+
+  <!-- 19 CAU CHOT PASCAL -->
+  <section class="slide" data-layout="statement">
+    <p class="kicker reveal">Câu chốt</p>
+    <h2 class="statement reveal">Pascal để <mark>xem nhanh, đưa sang BIM</mark>. Blender để làm ảnh gửi khách.</h2>
+    <p class="src abs fx fx-up" data-step="1" style="left:120px;bottom:100px;width:1500px;font-size:28px">Bản vẽ AutoCAD vẫn là nguồn của cả hai. Học viên tự cài ở nhà theo Prompt P.1, P.2.</p>
+  </section>
+
+  <!-- 20 CHUONG DO AN -->
+  <section class="slide" data-layout="chapter">
+    <p class="ch-num reveal-scale" aria-hidden="true">04</p>
+    <h2 class="title reveal" data-morph-id="chuong">Đồ án Lab 06</h2>
+    <p class="subtitle reveal">7 chặng trên căn nhà của chính anh chị</p>
+  </section>
+
+  <!-- 21 DE BAI -->
+  <section class="slide" data-layout="diagram" data-stage="clear">
+    <h2 class="title reveal">55 phút, phát hành lần 1</h2>
+    <div class="viz" data-viz="span" style="left:120px;right:120px;top:290px;bottom:330px"
+      data-values="8,20,10,10,7"
+      data-labels="Thư mục, chặng 1, 2|Chặng 3: bản vẽ|Chặng 4: Blender|Chặng 5, 6 song song|Chặng 7, /goal"
+      data-sub="Cổng 1|Cổng 2|Số cửa khớp|2 agent cùng chạy|Cổng 3" data-hot="1"
+      data-source="01_Giao_Trinh_Chi_Tiet_Buoi_06.md, mục 5.2"></div>
+    <div class="abs reveal" style="left:120px;top:800px;width:1680px;display:flex;gap:24px;font:500 26px/1.3 var(--font-body)">
+      <div style="flex:1;background:#f2f2f2;padding:20px 24px"><b>Giới hạn:</b> nhà phố tối đa 3 tầng, mặt bằng chữ nhật, 4 tờ KT.</div>
+      <div style="flex:1;background:#f2f2f2;padding:20px 24px"><b>Chưa chạy được AutoCAD:</b> dùng DXF mẫu nhà 7x20m, làm từ chặng 4.</div>
+    </div>
+  </section>
+
+  <!-- 22 DOI Y -->
+  <section class="slide s-chg" data-layout="free" data-stage="clear">
+    <h2 class="ft reveal">Tình huống: chủ nhà đổi ý</h2>
+    <div class="cd fx fx-drop" style="left:120px"><h3>Cửa sổ phòng ngủ tầng 2 cao thêm 200 mm</h3><p>Sửa bản vẽ, chạy lại chặng 4 đến 7, phát hành lan-2.</p></div>
+    <div class="cd fx fx-drop" style="left:700px;--d:.12s"><h3>Thêm 1 cửa sổ hông tầng 3</h3><p>Sửa bản vẽ, so khối lượng lần 1 và lần 2.</p></div>
+    <div class="cd trap fx fx-drop" style="left:1280px;--d:.24s"><h3 class="strike" data-step="1">Thêm lam gỗ mặt tiền như ảnh AI, tính khối lượng</h3><p>Lam chỉ có trên ảnh AI, chưa có trên bản vẽ.</p></div>
+    <p class="ans fx fx-up" data-step="2">Đúng: dừng lại, đề xuất bổ sung bản vẽ chi tiết lam trước rồi mới bóc.</p>
+  </section>
+
+  <!-- 23 D6 -->
+  <section class="slide" data-layout="diagram" data-stage="clear">
+    <h2 class="title reveal">Nghiệm thu D6 (thang 100)</h2>
+    <div class="viz" data-viz="span" style="left:120px;right:120px;top:290px;bottom:330px"
+      data-values="35,20,20,15,10"
+      data-labels="Hồ sơ lần 1 đủ, PDF có nội dung|3 cổng duyệt có thật|Số liệu xuyên suốt khớp|Đổi ý, lần 2|Skill, sổ prompt"
+      data-sub="35 điểm|20 điểm|20 điểm|15 điểm|10 điểm" data-hot="1"
+      data-source="01_Giao_Trinh_Chi_Tiet_Buoi_06.md, mục 6.2"></div>
+    <div class="abs reveal" style="left:120px;top:800px;width:1680px;display:flex;gap:20px;font:600 26px/1.25 var(--font-body)">
+      <div style="flex:1;background:#f2f2f2;padding:20px 26px"><b style="display:block;font:800 32px/1.1 var(--font-display)">Xuất sắc</b>90 đến 100</div>
+      <div style="flex:1;background:#f2f2f2;padding:20px 26px"><b style="display:block;font:800 32px/1.1 var(--font-display)">Đạt</b>70 đến 89</div>
+      <div style="flex:1;background:#f2f2f2;padding:20px 26px"><b style="display:block;font:800 32px/1.1 var(--font-display)">Chưa đạt</b>Dưới 70</div>
+    </div>
+  </section>
+
+  <!-- 24 TONG KET KHOA -->
+  <section class="slide s-sum" data-layout="free" data-stage="clear">
+    <h2 class="ft reveal">Ba câu mang về sau khóa học</h2>
+    <div class="row fx fx-left" style="top:250px"><span class="n">1</span><div><h3>Bản vẽ là nguồn.</h3><p>Mô hình, ảnh, khối lượng đều đọc lại từ bản vẽ.</p></div></div>
+    <div class="row fx fx-left" data-step="1" style="top:460px"><span class="n">2</span><div><h3>Người duyệt ở chỗ đắt tiền.</h3><p>AI làm nhanh, người chịu trách nhiệm ký.</p></div></div>
+    <div class="row fx fx-left" data-step="2" style="top:670px"><span class="n">3</span><div><h3>Không bịa số.</h3><p>Thiếu ghi [Chờ bổ sung], mâu thuẫn thì báo, đơn giá có nguồn.</p></div></div>
+    <p class="src abs" style="left:120px;bottom:50px;width:1680px;font-size:22px">Hồ sơ trong khóa là bản triển khai theo cấu tạo để học. Xin phép, thi công phải có kỹ sư, kiến trúc sư có chứng chỉ phù hợp kiểm tra và ký.</p>
+  </section>
+
+  <!-- 25 KET -->
+  <section class="slide s-end" data-layout="free" data-brand="hide">
+    <img class="bg" src="img/ai-hien-dai.jpg" alt="Ảnh AI nhà 7x20m phong cách hiện đại" style="object-position:40% 50%">
+    <p class="k reveal">Cảm ơn anh chị</p>
+    <p class="l reveal">Từ một tấm ảnh của chủ nhà đến <span>bộ hồ sơ gửi khách</span>.</p>
+    <p class="q reveal">CES Global · Khóa AI Agent trong Kỹ thuật &amp; Xây dựng · aec.cesglobal.com.vn</p>
+  </section>
+
+</div>
+</div>
+<script src="C:/Users/Admin/.claude/skills/slidefly/assets/morph-frames.js"></script>
+<script src="C:/Users/Admin/.claude/skills/slidefly/assets/morph-mock.js"></script>
+<script src="C:/Users/Admin/.claude/skills/slidefly/assets/morph-viz-diagrams.js"></script>
+<script src="C:/Users/Admin/.claude/skills/slidefly/assets/morph-viz.js"></script>
+<script src="C:/Users/Admin/.claude/skills/slidefly/assets/morph-engine.js"></script>
+<script src="C:/Users/Admin/.claude/skills/slidefly/assets/morph-nav.js"></script>
+<script src="C:/Users/Admin/.claude/skills/slidefly/assets/morph-audit.js"></script>
+<script src="C:/Users/Admin/.claude/skills/slidefly/assets/morph-steps.js"></script>
+<script src="C:/Users/Admin/.claude/skills/slidefly/assets/morph-icons.js"></script>
+</body>
+</html>

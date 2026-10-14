@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buổi 06: Đội AI Agent và bộ đồ nghề</title>
+<link rel="stylesheet" href="C:/Users/Admin/.claude/skills/slidefly/assets/morph-base.css">
+<link rel="stylesheet" href="C:/Users/Admin/.claude/skills/slidefly/assets/morph-layouts.css">
+<link rel="stylesheet" href="C:/Users/Admin/.claude/skills/slidefly/assets/morph-layouts-plus.css">
+<link rel="stylesheet" href="C:/Users/Admin/.claude/skills/slidefly/assets/morph-frames.css">
+<link rel="stylesheet" href="C:/Users/Admin/.claude/skills/slidefly/assets/morph-photo.css">
+<link rel="stylesheet" href="C:/Users/Admin/.claude/skills/slidefly/assets/morph-mock.css">
+<link rel="stylesheet" href="C:/Users/Admin/.claude/skills/slidefly/assets/morph-brand.css">
+<link rel="stylesheet" href="C:/Users/Admin/.claude/skills/slidefly/assets/styles/swiss-modern.css">
+<link rel="stylesheet" href="C:/Users/Admin/.claude/skills/slidefly/assets/morph-motion.css">
+<link rel="stylesheet" href="C:/Users/Admin/.claude/skills/slidefly/assets/morph-viz.css">
+<link rel="stylesheet" href="C:/Users/Admin/.claude/skills/slidefly/assets/morph-icons.css">
+<style>
+.slide .src { font: 400 20px/1.3 var(--font-body); color: var(--muted); }
+.slide code { font-family: 'Consolas', 'Courier New', monospace; }
+.chot { font: 700 32px/1.3 var(--font-display); color: var(--fg); border-left: 10px solid var(--accent); padding: 6px 0 6px 28px; }
+.abs { position: absolute; }
+.side { position: absolute; left: 1340px; top: 260px; width: 470px; margin: 0; padding-left: 30px; font: 500 28px/1.45 var(--font-body); }
+
+/* bia */
+.s-cover .c-kicker { position: absolute; left: 120px; top: 110px; font: 700 26px/1 var(--font-body); letter-spacing: .14em; color: var(--accent); text-transform: uppercase; }
+.s-cover h1 { position: absolute; left: 120px; top: 230px; width: 1060px; margin: 0; font: 900 100px/0.98 var(--font-display); letter-spacing: -0.04em; color: var(--fg); }
+.s-cover .c-sub { position: absolute; left: 120px; top: 600px; width: 960px; font: 500 34px/1.35 var(--font-body); }
+.s-cover .c-msg { position: absolute; left: 120px; top: 790px; width: 960px; font: 700 30px/1.3 var(--font-display); color: #fff; background: var(--ink); padding: 22px 30px; box-sizing: border-box; }
+.s-cover .c-meta { position: absolute; left: 120px; bottom: 56px; font: 500 24px/1 var(--font-body); color: var(--muted); }
+.s-cover .c-img { position: absolute; right: 0; top: 0; width: 640px; height: 1080px; object-fit: cover; }
+.s-cover .c-red { position: absolute; right: 640px; top: 0; width: 24px; height: 1080px; background: var(--accent); }
+
+/* cong truong */
+.s-site .r { position: absolute; width: 400px; height: 560px; top: 280px; background: #f2f2f2; padding: 30px; box-sizing: border-box; border-top: 12px solid var(--ink); }
+.s-site .r .who { font: 700 24px/1.2 var(--font-body); color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+.s-site .r h3 { margin: 12px 0 18px; font: 800 40px/1.1 var(--font-display); }
+.s-site .r .eq { font: 900 40px/1 var(--font-display); color: var(--accent); margin: 0 0 16px; }
+.s-site .r p { margin: 0; font: 400 27px/1.4 var(--font-body); }
+
+/* doi day du */
+.s-full .q { position: absolute; width: 310px; height: 270px; background: #f2f2f2; border-top: 10px solid var(--ink); padding: 20px 22px; box-sizing: border-box; }
+.s-full .q.gate { border-top-color: var(--accent); background: #fff1ec; }
+.s-full .q b { font: 900 44px/1 var(--font-display); color: var(--accent); }
+.s-full .q h3 { margin: 8px 0 8px; font: 800 30px/1.1 var(--font-display); }
+.s-full .q p { margin: 0; font: 400 24px/1.3 var(--font-body); }
+.s-full .q i { position: absolute; left: 22px; bottom: 16px; font: 700 22px/1 'Consolas', monospace; font-style: normal; color: var(--muted); }
+
+/* 4 thu */
+.s-four .c { position: absolute; width: 820px; height: 300px; background: #f2f2f2; padding: 30px 34px; box-sizing: border-box; }
+.s-four .c h3 { margin: 0 0 12px; font: 800 40px/1.1 var(--font-display); }
+.s-four .c h3 span { color: var(--accent); margin-right: 14px; }
+.s-four .c p { margin: 0; font: 400 29px/1.35 var(--font-body); }
+.s-four .c code { display: inline-block; margin-top: 14px; background: var(--ink); color: #fff; padding: 6px 14px; font-size: 25px; }
+
+/* bang model */
+.s-tb table { position: absolute; left: 120px; top: 250px; width: 1680px; border-collapse: collapse; font: 400 29px/1.3 var(--font-body); }
+.s-tb th { background: var(--ink); color: #fff; text-align: left; padding: 16px 18px; font: 700 25px/1.2 var(--font-display); }
+.s-tb td { padding: 20px 18px; border-bottom: 2px solid #e2e2e2; vertical-align: top; }
+.s-tb td:first-child { font-weight: 800; }
+.s-tb td.m { color: var(--accent); font-weight: 800; }
+
+/* so do doi */
+.s-team .n { position: absolute; width: 420px; height: 190px; background: #f2f2f2; border-top: 10px solid var(--ink); padding: 22px 26px; box-sizing: border-box; }
+.s-team .n.lead { background: var(--ink); color: #fff; border-top-color: var(--accent); }
+.s-team .n h3 { margin: 0 0 8px; font: 800 34px/1.1 var(--font-display); }
+.s-team .n p { margin: 0; font: 400 24px/1.35 var(--font-body); }
+.s-team .n.lead p { color: #ddd; }
+.s-team .ar { position: absolute; height: 6px; background: var(--accent); }
+.s-team .ar::after { content: ''; position: absolute; right: -4px; top: -11px; border-left: 22px solid var(--accent); border-top: 14px solid transparent; border-bottom: 14px solid transparent; }
+.s-team .lab { position: absolute; font: 700 24px/1.2 var(--font-body); color: var(--accent); }
+
+/* cay file */
+.s-tree pre { position: absolute; left: 120px; top: 250px; width: 980px; margin: 0; background: var(--ink); color: #fff; font: 400 28px/1.6 'Consolas', monospace; padding: 34px 40px; box-sizing: border-box; }
+.s-tree pre .h { color: var(--accent); font-weight: 700; }
+.s-tree pre .d { color: #9a9a9a; }
+.s-tree .card { position: absolute; left: 1160px; top: 250px; width: 640px; background: #f2f2f2; border-top: 10px solid var(--accent); padding: 28px 32px; box-sizing: border-box; }
+.s-tree .card h3 { margin: 0 0 14px; font: 800 32px/1.1 var(--font-display); }
+.s-tree .card li { font: 400 27px/1.5 var(--font-body); }
+
+/* agent file */
+.agf { position: absolute; left: 1170px; top: 240px; width: 630px; margin: 0; background: var(--ink); color: #fff; font: 400 25px/1.55 'Consolas', monospace; padding: 28px 30px; box-sizing: border-box; }
+.agf .k { color: var(--accent); }
+
+/* quy trinh video */
+.s-flow .f { position: absolute; top: 330px; width: 300px; height: 400px; background: #f2f2f2; padding: 28px 26px; box-sizing: border-box; border-top: 12px solid var(--ink); }
+.s-flow .f b { display: block; font: 900 72px/1 var(--font-display); color: var(--accent); }
+.s-flow .f h3 { margin: 14px 0 10px; font: 800 34px/1.1 var(--font-display); }
+.s-flow .f p { margin: 0; font: 400 25px/1.35 var(--font-body); color: var(--muted); }
+.s-flow .f.gate { border-top-color: var(--accent); }
+.s-flow .g { position: absolute; top: 760px; font: 800 26px/1.2 var(--font-display); color: var(--accent); }
+
+/* ket */
+.s-end .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.s-end .sh { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.82) 0%, rgba(0,0,0,.55) 55%, rgba(0,0,0,0) 100%); }
+.s-end .k { position: absolute; left: 120px; top: 300px; margin: 0; font: 900 110px/1 var(--font-display); color: #fff; letter-spacing: -0.03em; }
+.s-end .l { position: absolute; left: 120px; top: 460px; width: 1100px; margin: 0; font: 600 40px/1.3 var(--font-body); color: #fff; }
+.s-end .l span { color: var(--accent); }
+.s-end .q { position: absolute; left: 120px; bottom: 70px; margin: 0; font: 500 24px/1 var(--font-body); color: #ddd; }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<div class="deck-stage">
+<div class="brand"><i class="ico" data-icon="building-skyscraper"></i><span class="brand-name">CES Global</span></div>
+
+  <!-- 01 BIA -->
+  <section class="slide s-cover" data-layout="free" data-brand="hide">
+    <img class="c-img" src="img/indo-mat-tien.jpg" alt="Phối cảnh AI nhà phố 7x20m phong cách Indochine">
+    <div class="c-red"></div>
+    <p class="c-kicker reveal">Buổi 06 · Buổi cuối khóa</p>
+    <h1 class="reveal">Đội AI Agent và bộ đồ nghề hồ sơ</h1>
+    <p class="c-sub reveal">Lập một đội agent biết chia việc, bàn giao, soát chéo. Cài markitdown, Pascal, MotionFly chỉ bằng prompt.</p>
+    <p class="c-msg reveal">Chia vai rõ. Bàn giao bằng file. Người ký vẫn là kỹ sư.</p>
+    <p class="c-meta">Khóa AI Agent trong Kỹ thuật &amp; Xây dựng · CES Global</p>
+  </section>
+
+  <!-- 02 MUC TIEU -->
+  <section class="slide" data-layout="content" data-frame="numbered">
+    <h2 class="title reveal">Sau buổi này anh chị làm được</h2>
+    <ul class="bullets">
+      <li class="reveal"><b>Thiết kế một đội agent</b>: mỗi thành viên một vai, một model, một mức suy luận.</li>
+      <li class="reveal"><b>Cho đội chạy trên Claude Code</b>: ai làm song song, ai chờ ai, bàn giao bằng file.</li>
+      <li class="reveal"><b>Cài 3 công cụ bằng prompt</b>: markitdown, Pascal Editor, MotionFly.</li>
+      <li class="reveal"><b>Làm video giới thiệu công trình</b> từ bản vẽ và ảnh render.</li>
+    </ul>
+    <aside class="highlight reveal-scale">
+      <div class="hl-icon"><i class="ico" data-icon="users-group"></i></div>
+      <p class="hl-text">Một kỹ sư chủ trì, nhiều trợ lý chuyên trách</p>
+    </aside>
+  </section>
+
+  <!-- 03 CHUONG 1 -->
+  <section class="slide" data-layout="chapter">
+    <p class="ch-num reveal-scale" aria-hidden="true">01</p>
+    <h2 class="title reveal" data-morph-id="chuong">Đội AI Agent</h2>
+    <p class="subtitle reveal">Tổ chức như một công trường thu nhỏ</p>
+  </section>
+
+  <!-- 04 VI SAO CAN DOI -->
+  <section class="slide" data-layout="statement">
+    <p class="kicker reveal">Vì sao cần đội</p>
+    <h2 class="statement reveal">Một agent ôm hết việc thì <mark>đầy trí nhớ</mark> và tự chấm bài mình.</h2>
+    <p class="src abs fx fx-up" data-step="1" style="left:120px;bottom:100px;width:1600px;font-size:30px">Chia ra nhiều agent: mỗi người đọc ít hơn, làm kỹ hơn, và có người thứ ba soát chéo.</p>
+  </section>
+
+  <!-- 05 CONG TRUONG -->
+  <section class="slide s-site" data-layout="free" data-stage="clear">
+    <h2 class="title reveal">Đội agent giống tổ chức công trường</h2>
+    <div class="r reveal" style="left:120px"><p class="who">Công trường</p><h3>Chỉ huy trưởng</h3><p class="eq">= Agent chính</p><p>Nhận việc từ anh chị, chia việc, gộp kết quả.</p></div>
+    <div class="r reveal" style="left:545px"><p class="who">Công trường</p><h3>Tổ chuyên môn</h3><p class="eq">= Subagent</p><p>Kiến trúc, bóc khối lượng: mỗi tổ một việc.</p></div>
+    <div class="r reveal" style="left:970px"><p class="who">Công trường</p><h3>Giám sát</h3><p class="eq">= Agent kiểm tra</p><p>Chỉ đọc, không sửa, kết luận ĐẠT hay CẦN SỬA.</p></div>
+    <div class="r reveal" style="left:1395px"><p class="who">Công trường</p><h3>Biên bản bàn giao</h3><p class="eq">= File handoff</p><p>Ai làm xong ghi lại để người sau đọc.</p></div>
+  </section>
+
+  <!-- DOI DAY DU MOT DU AN -->
+  <section class="slide s-full" data-layout="free" data-stage="clear">
+    <h2 class="title reveal">Một dự án nhà phố thật cần bao nhiêu agent?</h2>
+    <div class="q reveal" style="left:120px;top:250px"><b>1</b><h3>Tiếp nhận yêu cầu</h3><p>Phiếu yêu cầu, câu hỏi khách</p><i>sonnet</i></div>
+    <div class="q reveal" style="left:455px;top:250px"><b>2</b><h3>Kiến trúc</h3><p>Vẽ AutoCAD qua MCP</p><i>opus</i></div>
+    <div class="q reveal" style="left:790px;top:250px"><b>3</b><h3>Kết cấu</h3><p>Móng, dầm, sàn, thép</p><i>opus</i></div>
+    <div class="q reveal" style="left:1125px;top:250px"><b>4</b><h3>Điện nước</h3><p>Mặt bằng ME</p><i>sonnet</i></div>
+    <div class="q reveal" style="left:1460px;top:250px"><b>5</b><h3>Dựng 3D</h3><p>Blender, Pascal từ file mô tả</p><i>sonnet</i></div>
+    <div class="q reveal" style="left:120px;top:560px"><b>6</b><h3>Render</h3><p>Đổi phong cách qua ChatGPT MCP</p><i>sonnet</i></div>
+    <div class="q reveal" style="left:455px;top:560px"><b>7</b><h3>Bóc khối lượng</h3><p>Từ bản vẽ, có diễn giải</p><i>sonnet</i></div>
+    <div class="q reveal" style="left:790px;top:560px"><b>8</b><h3>Dự toán, báo giá</h3><p>Giá theo công bố giá Sở XD</p><i>sonnet</i></div>
+    <div class="q gate reveal" style="left:1125px;top:560px"><b>9</b><h3>Kiểm soát hồ sơ</h3><p>Chỉ đọc, soát chéo cả bộ</p><i>sonnet · high</i></div>
+    <div class="q reveal" style="left:1460px;top:560px"><b>10</b><h3>Hồ sơ gửi khách</h3><p>PDF, video MotionFly, thư nháp</p><i>sonnet</i></div>
+    <p class="chot abs fx fx-up" data-step="1" style="left:120px;top:870px;width:1680px;font-size:29px">Không bật cả 10 cùng lúc: chạy theo từng chặng. Người duyệt ở 3 chỗ đắt tiền: khách chốt phương án, kỹ sư ký bản vẽ, người bấm gửi.</p>
+  </section>
+
+  <!-- 06 NGU CANH -->
+  <section class="slide" data-layout="statement">
+    <p class="kicker reveal">Điều quan trọng nhất</p>
+    <h2 class="statement reveal">Mỗi agent ngồi một phòng riêng, <mark>không nghe</mark> cuộc trò chuyện của anh chị.</h2>
+    <p class="src abs fx fx-up" data-step="1" style="left:120px;bottom:100px;width:1600px;font-size:30px">Nó chỉ biết CLAUDE.md, skill, MCP và lời giao việc. Muốn nó biết gì thì ghi vào lời giao việc hoặc vào file.</p>
+  </section>
+
+  <!-- CLAUDE.MD VA RULES -->
+  <section class="slide s-tree" data-layout="free" data-stage="clear">
+    <h2 class="title reveal">CLAUDE.md gọn nhẹ: tách luật ra .claude/rules/</h2>
+<pre class="reveal"><span class="h">du-an-nha-pho\</span>
+├── <span class="h">CLAUDE.md</span>            <span class="d">ngắn: dự án là gì</span>
+└── .claude\
+    └── rules\
+        ├── so-lieu.md      <span class="d">luôn nạp</span>
+        ├── ban-giao.md     <span class="d">paths: handoff/**</span>
+        └── autocad.md      <span class="d">paths: **/*.dwg</span>
+<span class="h">~/.claude/rules/</span>         <span class="d">luật chung mọi dự án</span></pre>
+    <div class="card reveal">
+      <h3>Nạp vào lúc nào</h3>
+      <ul>
+        <li>CLAUDE.md và rules không ghi <code>paths</code>: nạp ngay khi mở phiên</li>
+        <li>Rules có <code>paths</code>: chỉ nạp khi Claude đọc, sửa file khớp</li>
+        <li><code>@import</code> chỉ cho gọn mắt, vẫn nạp từ đầu</li>
+        <li>Nên giữ mỗi CLAUDE.md dưới 200 dòng</li>
+      </ul>
+    </div>
+    <p class="src abs" style="left:120px;bottom:44px">Nguồn: code.claude.com/docs/en/memory, mục Organize rules with .claude/rules/.</p>
+  </section>
+
+  <!-- MCP SCOPE -->
+  <section class="slide s-tb" data-layout="free" data-stage="clear">
+    <h2 class="title reveal">MCP cài ở dự án hay Global?</h2>
+    <table class="reveal">
+      <thead><tr><th>Phạm vi</th><th>Lưu ở đâu</th><th>Dùng được ở</th><th>Hợp với</th></tr></thead>
+      <tbody>
+        <tr><td>local (mặc định)</td><td>~/.claude.json, theo dự án</td><td>Chỉ dự án này, chỉ mình anh chị</td><td>Thử MCP mới</td></tr>
+        <tr><td>project</td><td>.mcp.json ở thư mục dự án</td><td>Dự án này, chia sẻ cho cả nhóm</td><td>MCP riêng của một công trình</td></tr>
+        <tr><td class="m">user (Global)</td><td>~/.claude.json</td><td>Mọi dự án trên máy</td><td>AutoCAD, Blender, ChatGPT ảnh</td></tr>
+      </tbody>
+    </table>
+    <ul class="abs" style="left:120px;top:660px;width:1680px;margin:0;padding-left:30px;font:500 29px/1.5 var(--font-body)">
+      <li class="reveal">Trùng tên: <b>local thắng project, project thắng user</b>.</li>
+      <li class="reveal">MCP kết nối khi mở phiên; công cụ của nó được <b>tìm khi cần</b> (tool search, mặc định bật) nên không nhồi hết vào ngữ cảnh.</li>
+      <li class="reveal">MCP ở project: Claude hỏi anh chị duyệt trước khi dùng lần đầu.</li>
+    </ul>
+    <p class="src abs" style="left:120px;bottom:44px">File .md là lời dặn cho Claude đọc; file .json là sổ đăng ký kết nối MCP, Claude Code tự ghi. Nguồn: code.claude.com/docs/en/mcp.</p>
+  </section>
+
+  <!-- PROMPT RULES + MCP -->
+  <section class="slide" data-layout="diagram" data-stage="clear">
+    <h2 class="title reveal">Prompt: dọn CLAUDE.md và cài MCP đúng chỗ</h2>
+    <div class="mock mock-chat" data-title="Claude Code" style="left:120px;top:240px;width:1160px;height:720px">
+      <div class="msg user type">CLAUDE.md của dự án này đang dài. Sao lưu bản cũ vào _backup, rồi giữ lại phần mô tả dự án, tách các quy tắc ra .claude/rules/: so-lieu.md (luôn áp dụng), ban-giao.md chỉ áp dụng cho thư mục handoff (dùng paths). Đọc lại cho tôi kiểm.</div>
+      <div class="msg user" data-step="1">Kiểm tra các MCP đang cài trên máy tôi và cho biết mỗi cái đang ở phạm vi local, project hay user. MCP AutoCAD tôi dùng cho mọi công trình: chuyển sang phạm vi user. Báo lại trước khi đổi.</div>
+    </div>
+    <ul class="side">
+      <li class="reveal">Luật chung, dùng mọi nơi: rules không paths</li>
+      <li class="reveal">Luật cho một loại file: rules có paths</li>
+      <li class="reveal">MCP dùng mọi dự án: phạm vi user</li>
+    </ul>
+  </section>
+
+  <!-- 07 BON THU -->
+  <section class="slide s-four" data-layout="free" data-stage="clear">
+    <h2 class="title reveal">Mỗi thành viên phải định bốn thứ</h2>
+    <div class="c reveal" style="left:120px;top:250px"><h3><span>1</span>Nhiệm vụ</h3><p>Một vai, một đầu ra rõ, không chồng việc người khác.</p><code>description: ...</code></div>
+    <div class="c reveal" style="left:980px;top:250px"><h3><span>2</span>Model</h3><p>Chọn theo độ khó của việc, không chọn theo thói quen.</p><code>model: sonnet</code></div>
+    <div class="c reveal" style="left:120px;top:590px"><h3><span>3</span>Mức suy luận</h3><p>Nghĩ nhiều hay nghĩ nhanh: low, medium, high, xhigh, max.</p><code>effort: high</code></div>
+    <div class="c reveal" style="left:980px;top:590px"><h3><span>4</span>Quyền</h3><p>Người soát chỉ được đọc, không được sửa file.</p><code>tools: Read, Glob, Grep</code></div>
+    <p class="src abs" style="left:120px;bottom:44px">Nguồn: code.claude.com/docs/en/sub-agents (các trường name, description, tools, model, effort).</p>
+  </section>
+
+  <!-- 08 CHON MODEL -->
+  <section class="slide s-tb" data-layout="free" data-stage="clear">
+    <h2 class="title reveal">Việc nào dùng model nào</h2>
+    <table class="reveal">
+      <thead><tr><th>Vai trong đội</th><th>Việc</th><th>Model</th><th>Mức suy luận</th></tr></thead>
+      <tbody>
+        <tr><td>Kiến trúc sư</td><td>Đọc bản vẽ, lập bảng thông số, đề xuất phương án</td><td class="m">opus</td><td>high</td></tr>
+        <tr><td>Kỹ sư bóc khối lượng</td><td>Tính theo kích thước, có diễn giải, ra Excel</td><td class="m">sonnet</td><td>high</td></tr>
+        <tr><td>Kỹ sư kiểm tra</td><td>Soát chéo phương pháp, chỗ sót, chỗ trừ hai lần</td><td class="m">sonnet</td><td>high</td></tr>
+        <tr><td>Thư ký</td><td>Đổi tên file, gom danh sách, tóm tắt ngắn</td><td class="m">haiku</td><td>low</td></tr>
+      </tbody>
+    </table>
+    <p class="chot abs fx fx-up" data-step="1" style="left:120px;top:800px;width:1680px;font-size:30px">Việc khó, cần lập luận: model mạnh. Việc lặp lại, khối lượng lớn: model nhẹ cho đỡ tốn.</p>
+  </section>
+
+  <!-- 09 5 BUOC -->
+  <section class="slide" data-layout="content" data-frame="stairs">
+    <h2 class="title reveal">Lập đội trong 5 bước</h2>
+    <ul class="bullets">
+      <li class="reveal"><b>Vẽ sơ đồ đội</b>: ai làm gì, ai chờ ai</li>
+      <li class="reveal"><b>Tạo file cho từng agent</b> bằng một prompt</li>
+      <li class="reveal"><b>Quy định file bàn giao</b></li>
+      <li class="reveal"><b>Giao việc cho cả đội</b></li>
+      <li class="reveal"><b>Soát và gộp</b> trước khi dùng</li>
+    </ul>
+  </section>
+
+  <!-- 10 BUOC 1 SO DO -->
+  <section class="slide s-team" data-layout="free" data-stage="clear">
+    <h2 class="title reveal">Bước 1. Vẽ sơ đồ đội trước khi gõ prompt</h2>
+    <div class="n lead reveal" style="left:120px;top:440px"><h3>Agent chính</h3><p>Viết phiếu giao việc, chia việc, gộp báo cáo</p></div>
+    <div class="ar reveal" style="left:560px;top:420px;width:190px;transform:rotate(-14deg)"></div>
+    <div class="ar reveal" style="left:560px;top:640px;width:190px;transform:rotate(14deg)"></div>
+    <div class="n reveal" style="left:770px;top:280px"><h3>kien-truc</h3><p>Bảng thông số, danh sách phòng</p></div>
+    <div class="n reveal" style="left:770px;top:600px"><h3>boc-kl</h3><p>Bóc khối lượng phần thô ra Excel</p></div>
+    <p class="lab reveal" style="left:790px;top:500px">Song song</p>
+    <div class="ar reveal" style="left:1210px;top:690px;width:150px"></div>
+    <div class="n reveal" style="left:1380px;top:600px"><h3>kiem-tra</h3><p>Chỉ đọc, soát chéo bóc khối lượng</p></div>
+    <p class="lab reveal" style="left:1380px;top:830px">Chờ boc-kl xong mới chạy</p>
+    <p class="chot abs fx fx-up" data-step="1" style="left:1380px;top:280px;width:420px;font-size:28px">Việc không phụ thuộc nhau thì cho chạy song song.</p>
+  </section>
+
+  <!-- 11 BUOC 2 TAO AGENT -->
+  <section class="slide" data-layout="diagram" data-stage="clear">
+    <h2 class="title reveal">Bước 2. Tạo file cho từng agent</h2>
+    <div class="mock mock-chat" data-title="Claude Code" style="left:120px;top:240px;width:1000px;height:720px">
+      <div class="msg user type">Trong dự án hiện tại, tạo 3 file agent trong .claude/agents/ theo chuẩn subagent của Claude Code (name, description, tools, model, effort): kien-truc-su (opus, high), ky-su-boc-khoi-luong (sonnet, high), ky-su-kiem-tra (sonnet, high, chỉ đọc). Mỗi agent ghi kết quả vào handoff/NN_ten.md theo mẫu chung. Không bịa số liệu. Tạo xong đọc lại cho tôi kiểm.</div>
+    </div>
+<pre class="agf reveal"><span class="k">---</span>
+<span class="k">name:</span> ky-su-kiem-tra
+<span class="k">description:</span> Soát chéo bảng
+  bóc khối lượng, chỉ đọc
+<span class="k">tools:</span> Read, Glob, Grep
+<span class="k">model:</span> sonnet
+<span class="k">effort:</span> high
+<span class="k">---</span>
+Bạn là kỹ sư QS khó tính.
+Ghi handoff/03_kiem-tra.md.
+Dòng đầu: Kết luận ĐẠT
+hoặc CẦN SỬA.</pre>
+    <p class="chot abs fx fx-up" data-step="1" style="left:1170px;top:780px;width:630px;font-size:27px">Tạo xong mở cuộc trò chuyện mới để Claude nhận agent.</p>
+  </section>
+
+  <!-- 12 BUOC 3 BAN GIAO -->
+  <section class="slide s-tree" data-layout="free" data-stage="clear">
+    <h2 class="title reveal">Bước 3. Quy định file bàn giao</h2>
+<pre class="reveal"><span class="h">du-an-nha-pho\</span>
+├── <span class="h">00_phieu-giao-viec.md</span>   <span class="d">agent chính</span>
+├── handoff\
+│   ├── 01_kien-truc.md       <span class="d">kien-truc</span>
+│   ├── 02_boc-khoi-luong.md  <span class="d">boc-kl</span>
+│   └── 03_kiem-tra.md        <span class="d">kiem-tra</span>
+└── <span class="h">99_bao-cao-tong-hop.md</span>  <span class="d">agent chính gộp</span></pre>
+    <div class="card reveal">
+      <h3>Mẫu chung mỗi file bàn giao</h3>
+      <ul>
+        <li>Việc được giao</li>
+        <li>Đầu vào đã đọc</li>
+        <li>Đầu ra (đường dẫn file)</li>
+        <li>Giả định đã dùng</li>
+        <li>Chỗ chưa chắc</li>
+        <li>Việc người sau cần làm</li>
+      </ul>
+    </div>
+    <p class="chot abs fx fx-up" data-step="1" style="left:120px;top:850px;width:1680px;font-size:30px">Mỗi agent chỉ sửa file của mình: hai agent cùng sửa một file sẽ ghi đè nhau.</p>
+  </section>
+
+  <!-- 13 BUOC 4 GIAO VIEC -->
+  <section class="slide" data-layout="diagram" data-stage="clear">
+    <h2 class="title reveal">Bước 4. Giao việc cho cả đội</h2>
+    <div class="mock mock-chat" data-title="Claude Code" style="left:120px;top:240px;width:1160px;height:720px">
+      <div class="msg user type">Lập đội 3 agent cho hồ sơ nhà phố trong thư mục này. Viết 00_phieu-giao-viec.md trước. Đặt tên "kien-truc" (agent kien-truc-su) và "boc-kl" (agent ky-su-boc-khoi-luong), cho chạy song song, mỗi người chỉ sửa file của mình. Hai người xong mới chạy "kiem-tra" (agent ky-su-kiem-tra). Mỗi agent ghi handoff/NN_ten.md. Cuối cùng gộp vào 99_bao-cao-tong-hop.md.</div>
+      <div class="msg ai lines think" data-who="Claude" data-step="1">
+        <p>Đã viết phiếu giao việc.</p>
+        <p>kien-truc và boc-kl đang chạy song song.</p>
+        <p>kiem-tra chờ 2 file bàn giao.</p>
+      </div>
+    </div>
+    <ul class="side">
+      <li class="reveal">Gọi đúng tên agent đã tạo</li>
+      <li class="reveal">Nói rõ ai song song, ai chờ</li>
+      <li class="reveal">Nói rõ file đầu ra</li>
+      <li class="reveal">Đặt tên để các agent nhắn được cho nhau</li>
+    </ul>
+    <p class="src abs" style="left:1340px;top:880px;width:470px">Khung trả lời là ví dụ minh họa.</p>
+  </section>
+
+  <!-- 14 BUOC 5 SOAT -->
+  <section class="slide" data-layout="content" data-frame="numbered">
+    <h2 class="title reveal">Bước 5. Soát và gộp trước khi dùng</h2>
+    <ul class="bullets">
+      <li class="reveal"><b>Mở từng file bàn giao</b>: đủ đầu vào, đầu ra, giả định, chỗ chưa chắc chưa?</li>
+      <li class="reveal"><b>Đọc kết luận kiểm tra</b>: CẦN SỬA thì giao lại đúng agent đã làm.</li>
+      <li class="reveal"><b>Đối chiếu số với bản vẽ</b>: không tin số chỉ vì AI viết ra.</li>
+      <li class="reveal"><b>Ghi lại kinh nghiệm</b> vào file agent cho lần sau.</li>
+    </ul>
+    <aside class="highlight reveal-scale">
+      <div class="hl-icon"><i class="ico" data-icon="clipboard-check"></i></div>
+      <p class="hl-text">Người ký vẫn là kỹ sư, không phải agent</p>
+    </aside>
+  </section>
+
+  <!-- 15 LOI HAY GAP -->
+  <section class="slide" data-layout="content" data-frame="zigzag">
+    <h2 class="title reveal">Bốn lỗi hay gặp và cách sửa</h2>
+    <ul class="bullets">
+      <li class="reveal"><b>Không thấy agent vừa tạo</b>: mở cuộc trò chuyện mới.</li>
+      <li class="reveal"><b>Hai agent ghi đè file nhau</b>: chia mỗi người một file riêng.</li>
+      <li class="reveal"><b>Agent bịa số</b>: ghi luật "không có trong tài liệu thì ghi Tài liệu không đề cập".</li>
+      <li class="reveal"><b>Tốn token</b>: việc nhẹ dùng sonnet hoặc haiku, đội 3 người là đủ.</li>
+    </ul>
+  </section>
+
+  <!-- DEMO SO DO -->
+  <section class="slide s-team" data-layout="free" data-stage="clear">
+    <h2 class="title reveal">Demo tối nay: 4 agent trình phương án cho khách</h2>
+    <div class="n lead reveal" style="left:120px;top:440px"><h3>Agent chính</h3><p>Phiếu giao việc, gộp báo cáo, thư nháp gửi khách</p></div>
+    <div class="ar reveal" style="left:560px;top:380px;width:190px;transform:rotate(-22deg)"></div>
+    <div class="ar reveal" style="left:560px;top:535px;width:190px"></div>
+    <div class="ar reveal" style="left:560px;top:690px;width:190px;transform:rotate(22deg)"></div>
+    <div class="n reveal" style="left:770px;top:240px"><h3>tiep-nhan</h3><p>Yêu cầu khách khớp bản vẽ chưa</p></div>
+    <div class="n reveal" style="left:770px;top:450px"><h3>kien-truc</h3><p>Thuyết minh phương án từng tầng</p></div>
+    <div class="n reveal" style="left:770px;top:660px"><h3>khoi-luong</h3><p>Khối lượng phần thô sơ bộ</p></div>
+    <div class="ar reveal" style="left:1210px;top:535px;width:150px"></div>
+    <div class="n reveal" style="left:1380px;top:450px"><h3>kiem-tra</h3><p>Chỉ đọc, soát chéo 3 file bàn giao</p></div>
+    <p class="lab reveal" style="left:1380px;top:670px">Chờ 3 agent xong</p>
+    <p class="chot abs fx fx-up" data-step="1" style="left:120px;top:880px;width:1680px;font-size:28px">Khách muốn 3 phòng ngủ, bản vẽ có 2: agent tiếp nhận phải bắt được trước khi trình khách.</p>
+  </section>
+
+  <!-- DEMO THU MUC -->
+  <section class="slide s-tree" data-layout="free" data-stage="clear">
+    <h2 class="title reveal">Bộ demo có sẵn trong thư mục buổi 6</h2>
+<pre class="reveal"><span class="h">demo\02-doi-agent-ho-so-nha-pho\</span>
+├── CLAUDE.md
+├── .claude\rules\   <span class="d">so-lieu, ban-giao</span>
+├── .claude\agents\  <span class="d">4 agent</span>
+├── <span class="h">00_yeu-cau-khach-hang.md</span>
+├── <span class="h">01_prompt-chay-doi.md</span>
+└── dau-vao\         <span class="d">bản vẽ PDF, MD, JSON,</span>
+                     <span class="d">bảng cửa, BOQ, phối cảnh</span></pre>
+    <div class="card reveal">
+      <h3>Cách chạy trong lớp</h3>
+      <ul>
+        <li>Mở thư mục demo trong Claude Code</li>
+        <li>Mở cuộc trò chuyện mới</li>
+        <li>Dán prompt trong 01_prompt-chay-doi.md</li>
+        <li>Xem handoff\ có file mới lần lượt</li>
+        <li>Đọc 99_bao-cao-tong-hop.md</li>
+      </ul>
+    </div>
+    <p class="chot abs fx fx-up" data-step="1" style="left:120px;top:850px;width:1680px;font-size:29px">Khoảng 10 phút. Về nhà thay bằng căn nhà của chính mình.</p>
+  </section>
+
+  <!-- PROMPT DEMO -->
+  <section class="slide" data-layout="diagram" data-stage="clear">
+    <h2 class="title reveal">Prompt chạy demo đội 4 agent</h2>
+    <div class="mock mock-chat" data-title="Claude Code · thư mục demo" style="left:120px;top:240px;width:1160px;height:740px">
+      <div class="msg user type">Lập đội agent cho hồ sơ trình khách nhà phố trong thư mục này. (0) Chuyển 00_yeu-cau-khach-hang.docx sang .md bằng markitdown. (1) Viết 00_phieu-giao-viec.md. (2) Chạy song song "tiep-nhan", "kien-truc", "khoi-luong" (đúng agent đã tạo), mỗi agent chỉ ghi handoff của mình. (3) Ba agent xong mới chạy "kiem-tra", ghi handoff/04_kiem-tra.md. (4) CẦN SỬA thì giao lại đúng agent, tối đa 1 vòng. (5) Gộp 99_bao-cao-tong-hop.md kèm thư nháp gửi khách, chưa gửi.</div>
+    </div>
+    <ul class="side">
+      <li class="reveal">Bản đầy đủ: 01_prompt-chay-doi.md</li>
+      <li class="reveal">Xem handoff\ có file mới lần lượt</li>
+      <li class="reveal">Chờ xem agent tiếp nhận bắt lỗi 3 phòng ngủ</li>
+    </ul>
+  </section>
+
+  <!-- 16 CHUONG 2 -->
+  <section class="slide" data-layout="chapter">
+    <p class="ch-num reveal-scale" aria-hidden="true">02</p>
+    <h2 class="title reveal" data-morph-id="chuong">Bộ đồ nghề cài bằng prompt</h2>
+    <p class="subtitle reveal">markitdown, Pascal Editor, MotionFly</p>
+  </section>
+
+  <!-- 17 NGUYEN TAC CAI -->
+  <section class="slide" data-layout="content" data-frame="rail">
+    <h2 class="title reveal">Một prompt cài đặt tốt có 4 phần</h2>
+    <ul class="bullets">
+      <li class="reveal"><b>Nguồn</b>: link repo hoặc tên gói chính thức.</li>
+      <li class="reveal"><b>Trình độ</b>: "tôi không rành terminal, hướng dẫn từng bước".</li>
+      <li class="reveal"><b>Giới hạn</b>: "không cài thêm gì ngoài README yêu cầu".</li>
+      <li class="reveal"><b>Bằng chứng</b>: "cài xong chạy thử và báo kết quả".</li>
+    </ul>
+    <aside class="highlight reveal-scale">
+      <div class="hl-icon"><i class="ico" data-icon="message-check"></i></div>
+      <p class="hl-text">Không cần biết lệnh, chỉ cần nói rõ</p>
+    </aside>
+  </section>
+
+  <!-- 18 MARKITDOWN -->
+  <section class="slide" data-layout="diagram" data-stage="clear">
+    <h2 class="title reveal">markitdown: hợp đồng, hồ sơ thành chữ cho AI</h2>
+    <div class="mock mock-chat" data-title="Claude Code" style="left:120px;top:240px;width:1160px;height:720px">
+      <div class="msg user type">Cài công cụ markitdown của Microsoft cho tôi (gói 'markitdown[all]', đọc được PDF, Word, Excel, PowerPoint). Máy chưa có Python thì hướng dẫn tôi từng bước, tôi không rành terminal. Cài xong chuyển thử một file PDF trong thư mục này sang .md và báo kết quả.</div>
+      <div class="msg user" data-step="1">Mở CLAUDE.md Global của tôi, sao lưu bản cũ trước, thêm mục: khi tôi đưa .pdf, .docx, .xlsx thì tự chuyển sang .md bằng markitdown, lưu cùng thư mục, mở ra kiểm. File .md gần như trống thì báo tôi đó là PDF scan.</div>
+    </div>
+    <ul class="side">
+      <li class="reveal">Bảng, điều khoản đọc chính xác hơn</li>
+      <li class="reveal">Tốn ít token hơn đọc PDF</li>
+      <li class="reveal">Ghi vào Global: mọi dự án đều tự làm</li>
+    </ul>
+    <p class="src abs" style="left:1340px;top:880px;width:470px">Nguồn: README microsoft/markitdown.</p>
+  </section>
+
+  <!-- 19 PASCAL -->
+  <section class="slide" data-layout="split-photo" data-stage="clear">
+    <img class="split-img" src="img/pascal-mat-tien.jpg" alt="Nhà 7x20m dựng trong Pascal Editor" style="--focus: 50% 50%">
+    <div class="split-text">
+      <p class="kicker reveal">Pascal Editor</p>
+      <h2 class="title reveal">Dựng 3D nhanh trên trình duyệt</h2>
+      <ul class="bullets">
+        <li class="reveal">Mã nguồn mở, dựng theo tường, cửa, sàn, thang, mái</li>
+        <li class="reveal">Cắt tầng, bung tầng để kỹ sư xem</li>
+        <li class="reveal">Nối với Claude qua MCP: Claude dựng thay mình</li>
+      </ul>
+    </div>
+    <p class="photo-credit">Nhà phố 7x20m dựng trong Pascal Editor (repo pascalorg/editor)</p>
+  </section>
+
+  <!-- 20 PASCAL PROMPT -->
+  <section class="slide" data-layout="diagram" data-stage="clear">
+    <h2 class="title reveal">Pascal: cài, nối MCP, dựng nhà</h2>
+    <div class="mock mock-chat" data-title="Claude Code" style="left:120px;top:240px;width:1160px;height:720px">
+      <div class="msg user type">Cài Pascal Editor từ repo https://github.com/pascalorg/editor cho tôi. Đọc README trước, chọn cách cài không cần tải mã nguồn (gói npm @pascal-app/cli). Máy chưa có Node.js thì hướng dẫn tôi từng bước. Cài xong mở Pascal lên, rồi nối Pascal với Claude Code qua MCP theo README và kiểm tra kết nối.</div>
+      <div class="msg user" data-step="1">Dùng Pascal dựng lại ngôi nhà theo file mô tả bản vẽ trong thư mục này (đơn vị mét): từng tầng, cửa, cầu thang, mái, sân. Chụp góc 3/4 và góc bung tầng. Bản vẽ không có thì ghi "Tài liệu không đề cập".</div>
+    </div>
+    <ul class="side">
+      <li class="reveal">Prompt 1: cài và nối MCP</li>
+      <li class="reveal">Prompt 2: dựng từ file mô tả bản vẽ</li>
+      <li class="reveal">Xem nhanh, không thay ảnh gửi khách</li>
+    </ul>
+    <p class="src abs" style="left:1340px;top:880px;width:470px">Nguồn: README pascalorg/editor.</p>
+  </section>
+
+  <!-- 21 MOTIONFLY QUY TRINH -->
+  <section class="slide s-flow" data-layout="free" data-stage="clear">
+    <h2 class="title reveal">MotionFly làm video như một đoàn làm phim</h2>
+    <div class="f reveal" style="left:120px"><b>1</b><h3>Kịch bản</h3><p>Lời đọc từng cảnh, số liệu lấy từ bản vẽ</p></div>
+    <div class="f reveal" style="left:460px"><b>2</b><h3>Giọng đọc</h3><p>Giọng Việt chạy trên máy, miễn phí</p></div>
+    <div class="f reveal" style="left:800px"><b>3</b><h3>Phân cảnh</h3><p>Hình xuất hiện đúng lúc đọc tới chữ đó</p></div>
+    <div class="f reveal" style="left:1140px"><b>4</b><h3>Dựng hình</h3><p>Bản vẽ, ảnh 3D, chữ, nhạc nền</p></div>
+    <div class="f reveal" style="left:1480px"><b>5</b><h3>Xuất MP4</h3><p>Kèm phụ đề, đúng chuẩn âm lượng</p></div>
+    <p class="g reveal" style="left:120px">Anh chị duyệt kịch bản</p>
+    <p class="g reveal" style="left:1140px">Anh chị duyệt tờ ảnh khung hình</p>
+  </section>
+
+  <!-- 22 MOTIONFLY PROMPT -->
+  <section class="slide" data-layout="diagram" data-stage="clear">
+    <h2 class="title reveal">MotionFly: cài và làm video bằng prompt</h2>
+    <div class="mock mock-chat" data-title="Claude Code" style="left:120px;top:240px;width:1160px;height:720px">
+      <div class="msg user type">Cài plugin MotionFly cho Claude Code của tôi từ repo https://github.com/andyluu98/MotionFly theo đúng hướng dẫn trong README. Cài xong kiểm tra máy còn thiếu gì (Node.js, ffmpeg, giọng đọc) và cài giúp tôi, tôi không rành terminal. Xong báo tôi khi máy đã sẵn sàng.</div>
+      <div class="msg user" data-step="1">Dùng MotionFly làm video khoảng 1 phút giới thiệu công trình nhà phố của tôi để thuyết trình cho chủ nhà, khung 16:9, style dark-keynote. Tư liệu: bản vẽ PDF và ảnh render trong thư mục này. Số liệu chỉ lấy từ bản vẽ. Cho tôi duyệt kịch bản trước, rồi duyệt tờ ảnh khung hình, rồi mới xuất MP4.</div>
+    </div>
+    <ul class="side">
+      <li class="reveal">Lần đầu tải giọng đọc mất vài phút</li>
+      <li class="reveal">Sửa bằng lời: "đổi giọng nam", "nhạc nhỏ lại", "sửa cảnh 3"</li>
+    </ul>
+    <p class="src abs" style="left:1340px;top:880px;width:470px">Nguồn: README andyluu98/MotionFly.</p>
+  </section>
+
+  <!-- 23 VI DU VIDEO -->
+  <section class="slide" data-layout="split-photo" data-stage="clear">
+    <img class="split-img" src="img/video-13400.jpg" alt="Khung hình video: cao độ +13.400 trên nền tối" style="--focus: 50% 50%">
+    <div class="split-text">
+      <p class="kicker reveal">Ví dụ thật</p>
+      <h2 class="title reveal">Video nhà phố 7x20m, 54 giây</h2>
+      <ul class="bullets">
+        <li class="reveal">Mặt bằng cắt từ bộ bản vẽ AutoCAD</li>
+        <li class="reveal">Ảnh Blender và ảnh phong cách Indochine</li>
+        <li class="reveal">Giọng đọc, nhạc nền, phụ đề tự làm</li>
+      </ul>
+    </div>
+    <p class="photo-credit">Khung hình video giới thiệu nhà phố 7x20m làm bằng MotionFly</p>
+  </section>
+
+  <!-- 24 KET -->
+  <section class="slide s-end" data-layout="free" data-brand="hide">
+    <img class="bg" src="img/indo-mat-tien.jpg" alt="Phối cảnh nhà phố 7x20m phong cách Indochine">
+    <div class="sh"></div>
+    <p class="k reveal">Mang về</p>
+    <p class="l reveal">Một đội agent có <span>file bàn giao</span>, ba công cụ cài bằng lời, và một video để chủ nhà xem trước khi xây.</p>
+    <p class="q reveal">CES Global · Khóa AI Agent trong Kỹ thuật &amp; Xây dựng</p>
+  </section>
+
+</div>
+</div>
+<script src="C:/Users/Admin/.claude/skills/slidefly/assets/morph-frames.js"></script>
+<script src="C:/Users/Admin/.claude/skills/slidefly/assets/morph-mock.js"></script>
+<script src="C:/Users/Admin/.claude/skills/slidefly/assets/morph-viz-diagrams.js"></script>
+<script src="C:/Users/Admin/.claude/skills/slidefly/assets/morph-viz.js"></script>
+<script src="C:/Users/Admin/.claude/skills/slidefly/assets/morph-engine.js"></script>
+<script src="C:/Users/Admin/.claude/skills/slidefly/assets/morph-nav.js"></script>
+<script src="C:/Users/Admin/.claude/skills/slidefly/assets/morph-audit.js"></script>
+<script src="C:/Users/Admin/.claude/skills/slidefly/assets/morph-steps.js"></script>
+<script src="C:/Users/Admin/.claude/skills/slidefly/assets/morph-icons.js"></script>
+</body>
+</html>
